@@ -1,0 +1,2 @@
+/Users/nerddevs/StudioProjects/getx_clean_architecture_boilerplate/android/app/.cxx/Debug/6v6b3i43/x86/CMakeFiles/edit_cache.dir
+/Users/nerddevs/StudioProjects/getx_clean_architecture_boilerplate/android/app/.cxx/Debug/6v6b3i43/x86/CMakeFiles/rebuild_cache.dir

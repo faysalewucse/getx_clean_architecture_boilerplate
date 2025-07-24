@@ -1,0 +1,1 @@
+/Users/nerddevs/StudioProjects/getx_clean_architecture_boilerplate/build/app/intermediates/cxx/Debug/6v6b3i43/obj/armeabi-v7a
