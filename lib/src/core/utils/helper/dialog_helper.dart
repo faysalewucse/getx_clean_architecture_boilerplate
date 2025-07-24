@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:getx_clean_architecture_boilerplate/src/components/buttons/primary_button.dart';
 import 'package:getx_clean_architecture_boilerplate/src/controllers/network_controller.dart';
+import 'package:getx_clean_architecture_boilerplate/src/shared/widgets/buttons/primary_button.dart';
 
 class DialogHelper {
   final networkController = Get.find<NetworkController>();

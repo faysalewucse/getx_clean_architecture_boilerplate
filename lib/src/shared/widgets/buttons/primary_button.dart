@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:getx_clean_architecture_boilerplate/src/components/loaders/primary_loader.dart';
+import 'package:getx_clean_architecture_boilerplate/src/shared/widgets/loaders/primary_loader.dart';
 
 class PrimaryButton extends StatelessWidget {
   final VoidCallback onPressed;

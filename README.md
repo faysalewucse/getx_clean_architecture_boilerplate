@@ -10,4 +10,4 @@ Flutter version 3.27
 
 Run 
 ``flutter pub get``
-``dart run flutter_launcher_icons``# getx_clean_architecture_boilerplate
+``dart run flutter_launcher_icons``

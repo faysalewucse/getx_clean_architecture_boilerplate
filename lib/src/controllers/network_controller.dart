@@ -3,7 +3,7 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:getx_clean_architecture_boilerplate/src/utils/helper/dialog_helper.dart';
+import 'package:getx_clean_architecture_boilerplate/src/core/utils/helper/dialog_helper.dart';
 
 class NetworkController extends GetxController {
   var isConnected = false.obs;
