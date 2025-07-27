@@ -3,7 +3,7 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:getx_clean_architecture_boilerplate/src/core/utils/helper/dialog_helper.dart';
+import 'package:getx_clean_architecture_boilerplate/src/core/utils/dialog_utils.dart';
 
 class NetworkController extends GetxController {
   var isConnected = false.obs;
@@ -25,7 +25,7 @@ class NetworkController extends GetxController {
     try {
       result = await _connectivity.checkConnectivity();
     } on PlatformException catch (e) {
-      debugPrint('Could not check connectivity status');
+      debugPrint('Could not check connectivity status : error is: $e');
       return;
     }
 
@@ -36,7 +36,7 @@ class NetworkController extends GetxController {
       List<ConnectivityResult> connectivityResult) async {
     if (connectivityResult.contains(ConnectivityResult.none)) {
       isConnected(false);
-      DialogHelper.showNoInternetDialog();
+      DialogUtils.showNoInternetDialog();
     } else {
       closeDialog();
     }

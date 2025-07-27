@@ -39,7 +39,7 @@ class PrimaryButton extends StatelessWidget {
       child: MaterialButton(
         elevation: elevation,
         onPressed: onPressed,
-        color: buttonBgColor.withValues(alpha: loading || disabled ? 0.3 : 1),
+        color: buttonBgColor.withValues(alpha:  loading || disabled ? 0.3 : 1),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(borderRadius),
           side: BorderSide(
