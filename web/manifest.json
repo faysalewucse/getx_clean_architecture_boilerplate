@@ -1,11 +1,11 @@
 {
-    "name": "getx_clean_architecture_boilerplate",
-    "short_name": "getx_clean_architecture_boilerplate",
+    "name": "nerddevs",
+    "short_name": "nerddevs",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
     "theme_color": "#0175C2",
-    "description": "A boilerplate project using getx and following clean architecture",
+    "description": "A new Flutter project.",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [

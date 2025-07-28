@@ -89,13 +89,13 @@ BEGIN
     BEGIN
         BLOCK "040904e4"
         BEGIN
-            VALUE "CompanyName", "com.project_domain" "\0"
-            VALUE "FileDescription", "getx_clean_architecture_boilerplate" "\0"
+            VALUE "CompanyName", "com.example" "\0"
+            VALUE "FileDescription", "nerddevs" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "getx_clean_architecture_boilerplate" "\0"
-            VALUE "LegalCopyright", "Copyright (C) 2025 com.project_domain. All rights reserved." "\0"
-            VALUE "OriginalFilename", "getx_clean_architecture_boilerplate.exe" "\0"
-            VALUE "ProductName", "getx_clean_architecture_boilerplate" "\0"
+            VALUE "InternalName", "nerddevs" "\0"
+            VALUE "LegalCopyright", "Copyright (C) 2025 com.example. All rights reserved." "\0"
+            VALUE "OriginalFilename", "nerddevs.exe" "\0"
+            VALUE "ProductName", "nerddevs" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END

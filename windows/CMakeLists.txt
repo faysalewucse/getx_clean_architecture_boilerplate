@@ -1,10 +1,10 @@
 # Project-level configuration.
 cmake_minimum_required(VERSION 3.14)
-project(getx_clean_architecture_boilerplate LANGUAGES CXX)
+project(nerddevs LANGUAGES CXX)
 
 # The name of the executable created for the application. Change this to change
 # the on-disk name of your application.
-set(BINARY_NAME "getx_clean_architecture_boilerplate")
+set(BINARY_NAME "nerddevs")
 
 # Explicitly opt in to modern CMake behaviors to avoid warnings with recent
 # versions of CMake.
