@@ -1,18 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
+import 'package:getx_clean_architecture_boilerplate/src/data/models/login_request_model.dart';
 import 'package:getx_clean_architecture_boilerplate/src/domain/entities/user_entity.dart';
 import 'package:getx_clean_architecture_boilerplate/src/presentation/routes/app_routes.dart';
 import 'package:getx_clean_architecture_boilerplate/src/domain/usecases/login_usecase.dart';
-import 'package:getx_clean_architecture_boilerplate/src/data/models/login_request_model.dart';
+import 'package:getx_clean_architecture_boilerplate/src/domain/usecases/is_user_logged_in_usecase.dart';
+import 'package:getx_clean_architecture_boilerplate/src/core/utils/toast_utils.dart';
 
 class AuthController extends GetxController {
   late final LoginUseCase loginUseCase;
+  late final IsUserLoggedInUseCase isUserLoggedInUseCase;
+  final RxBool isUserLoggedIn = false.obs;
 
   @override
   void onInit() {
     super.onInit();
     loginUseCase = Get.find<LoginUseCase>();
+    isUserLoggedInUseCase = Get.find<IsUserLoggedInUseCase>();
+    isUserLoggedIn.value = isUserLoggedInUseCase.execute();
   }
 
   // Observables
@@ -50,22 +55,10 @@ class AuthController extends GetxController {
       _isLoading.value = false;
       _user.value = user;
       Get.offAllNamed(Routes.home);
-      Get.snackbar(
-        'Success',
-        'Welcome back, [${user.name}]!',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.green,
-        colorText: Colors.white,
-      );
+      ToastUtils.showSuccessToast(message: 'Welcome back, ${user.name}!');
     } catch (e) {
       _isLoading.value = false;
-      Get.snackbar(
-        'Login Failed',
-        e.toString(),
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-      );
+      ToastUtils.showErrorToast(message: e.toString());
     }
   }
 

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:getx_clean_architecture_boilerplate/src/presentation/routes/app_routes.dart';
 import 'package:getx_clean_architecture_boilerplate/src/controllers/network_controller.dart';
+import 'package:getx_clean_architecture_boilerplate/src/domain/usecases/is_user_logged_in_usecase.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -16,6 +17,8 @@ class _SplashScreenState extends State<SplashScreen>
   late Animation<double> _fadeAnimation;
   late Animation<double> _scaleAnimation;
   final NetworkController networkController = Get.find<NetworkController>();
+  final IsUserLoggedInUseCase isUserLoggedInUseCase =
+      Get.find<IsUserLoggedInUseCase>();
 
   @override
   void initState() {
@@ -56,9 +59,13 @@ class _SplashScreenState extends State<SplashScreen>
       // Minimum splash screen display time
       await Future.delayed(const Duration(milliseconds: 2000));
 
-      // Navigate to home screen only if network is connected
+      // Navigate to home screen only if network is connected and user is logged in
       if (mounted && networkController.isConnected.value) {
-        Get.offAllNamed(Routes.home);
+        if (isUserLoggedInUseCase.execute()) {
+          Get.offAllNamed(Routes.home);
+        } else {
+          Get.offAllNamed(Routes.login);
+        }
       }
     } catch (e) {
       // Handle errors gracefully
