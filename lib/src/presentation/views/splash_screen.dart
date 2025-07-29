@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:getx_clean_architecture_boilerplate/src/presentation/routes/app_routes.dart';
+import 'package:getx_clean_architecture_boilerplate/src/controllers/network_controller.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -14,12 +15,15 @@ class _SplashScreenState extends State<SplashScreen>
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
   late Animation<double> _scaleAnimation;
+  final NetworkController networkController = Get.find<NetworkController>();
 
   @override
   void initState() {
     super.initState();
     _initializeAnimations();
-    _performStartupTasks();
+    if (networkController.isConnected.value) {
+      _performStartupTasks();
+    }
   }
 
   void _initializeAnimations() {
@@ -28,21 +32,13 @@ class _SplashScreenState extends State<SplashScreen>
       vsync: this,
     );
 
-    _fadeAnimation = Tween<double>(
-      begin: 0.0,
-      end: 1.0,
-    ).animate(CurvedAnimation(
-      parent: _animationController,
-      curve: Curves.easeInOut,
-    ));
+    _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(parent: _animationController, curve: Curves.easeInOut),
+    );
 
-    _scaleAnimation = Tween<double>(
-      begin: 0.5,
-      end: 1.0,
-    ).animate(CurvedAnimation(
-      parent: _animationController,
-      curve: Curves.elasticOut,
-    ));
+    _scaleAnimation = Tween<double>(begin: 0.5, end: 1.0).animate(
+      CurvedAnimation(parent: _animationController, curve: Curves.elasticOut),
+    );
 
     _animationController.forward();
   }
@@ -60,8 +56,8 @@ class _SplashScreenState extends State<SplashScreen>
       // Minimum splash screen display time
       await Future.delayed(const Duration(milliseconds: 2000));
 
-      // Navigate to home screen
-      if (mounted) {
+      // Navigate to home screen only if network is connected
+      if (mounted && networkController.isConnected.value) {
         Get.offAllNamed(Routes.home);
       }
     } catch (e) {

@@ -7,6 +7,7 @@ import 'package:getx_clean_architecture_boilerplate/src/presentation/bindings/in
 import 'package:getx_clean_architecture_boilerplate/src/presentation/routes/app_pages.dart';
 import 'package:getx_clean_architecture_boilerplate/src/presentation/routes/app_routes.dart';
 import 'package:getx_clean_architecture_boilerplate/src/presentation/themes/app_theme.dart';
+import 'package:getx_clean_architecture_boilerplate/src/presentation/translations/translation_service.dart';
 import 'package:toastification/toastification.dart';
 
 void main() async {
@@ -36,6 +37,7 @@ class MyApp extends StatelessWidget {
               initialBinding: InitialScreenBindings(),
               locale: const Locale('en', 'US'),
               fallbackLocale: const Locale('en', 'US'),
+              translations: AppTranslations(),
               theme: AppTheme.lightTheme,
               darkTheme: AppTheme.darkTheme,
               themeMode: themeController.currentTheme.value,

@@ -3,6 +3,9 @@ import 'package:get/get.dart';
 import 'package:getx_clean_architecture_boilerplate/src/core/constants/app_paddings.dart';
 import 'package:getx_clean_architecture_boilerplate/src/presentation/views/auth/auth.controller.dart';
 import 'package:getx_clean_architecture_boilerplate/src/shared/widgets/buttons/primary_button.dart';
+import 'package:getx_clean_architecture_boilerplate/src/core/utils/input_field_validators.dart';
+import 'package:getx_clean_architecture_boilerplate/src/shared/widgets/inputs/input_field.dart';
+import 'package:getx_clean_architecture_boilerplate/src/core/utils/size_utils.dart';
 import 'package:getx_clean_architecture_boilerplate/src/shared/widgets/loaders/primary_loader.dart';
 
 class LoginScreen extends GetView<AuthController> {
@@ -26,50 +29,30 @@ class LoginScreen extends GetView<AuthController> {
                   style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
                   textAlign: TextAlign.center,
                 ),
-                const SizedBox(height: 20),
+                20.kH,
 
                 // Email Field
-                TextFormField(
+                InputField(
+                  hintText: 'Email',
                   controller: controller.emailController,
                   keyboardType: TextInputType.emailAddress,
                   textInputAction: TextInputAction.next,
-                  decoration: const InputDecoration(
-                    labelText: 'Email',
-                    prefixIcon: Icon(Icons.email_outlined),
-                  ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter your email';
-                    }
-                    if (!GetUtils.isEmail(value)) {
-                      return 'Please enter a valid email';
-                    }
-                    return null;
-                  },
+                  prefixIcon: const Icon(Icons.email_outlined),
+                  validator: InputFieldValidators.email,
                 ),
-                const SizedBox(height: 16),
+                16.kH,
 
                 // Password Field
-                TextFormField(
+                InputField(
+                  hintText: 'Password',
                   controller: controller.passwordController,
                   obscureText: true,
                   textInputAction: TextInputAction.done,
-                  decoration: const InputDecoration(
-                    labelText: 'Password',
-                    prefixIcon: Icon(Icons.lock_outlined),
-                  ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter your password';
-                    }
-                    if (value.length < 6) {
-                      return 'Password must be at least 6 characters';
-                    }
-                    return null;
-                  },
-                  // onFieldSubmitted: (_) => controller.login(),
+                  prefixIcon: const Icon(Icons.lock_outlined),
+                  validator: InputFieldValidators.password,
+                  onFieldSubmitted: (_) => controller.login(),
                 ),
-                const SizedBox(height: 12),
+                12.kH,
 
                 // Remember Me
                 Obx(
@@ -80,19 +63,16 @@ class LoginScreen extends GetView<AuthController> {
                     contentPadding: EdgeInsets.zero,
                   ),
                 ),
-                const SizedBox(height: 20),
+                20.kH,
 
                 // Login Button
                 Obx(
                   () =>
                       controller.isLoading
                           ? const PrimaryLoader()
-                          : PrimaryButton(
-                            label: 'Login',
-                            onPressed: controller.login,
-                          ),
+                          : PrimaryButton(label: 'Login', onPressed: controller.login),
                 ),
-                const SizedBox(height: 16),
+                16.kH,
 
                 // Forgot Password
                 TextButton(

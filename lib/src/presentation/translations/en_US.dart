@@ -31,5 +31,6 @@ const Map<String, String> enUS = {
   'success': 'Operation completed successfully.',
   'failure': 'Operation failed. Please try again.',
   'no_internet_connection': 'No Internet Connection',
-  'please_check_your_connection': 'Please check your connection and try again.',
+  'please_check_your_internet_connection':
+      'Please turn on your wifi or mobile data and try again.',
 };
