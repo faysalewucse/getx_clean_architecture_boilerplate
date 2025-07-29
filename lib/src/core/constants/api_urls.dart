@@ -1,21 +1,22 @@
+import 'package:getx_clean_architecture_boilerplate/src/core/constants/app_environments.dart';
+
 class ApiUrls {
-  // Base URL
-  static const String baseUrl = "https://api.example.com";
+  static String get baseUrl => AppEnvironment.baseUrl;
 
   // Auth
-  static const String login = "$baseUrl/auth/login";
-  static const String register = "$baseUrl/auth/register";
-  static const String logout = "$baseUrl/auth/logout";
+  static String get login => "$baseUrl/auth/login";
+  static String get register => "$baseUrl/auth/register";
+  static String get logout => "$baseUrl/auth/logout";
 
   // User
-  static const String userProfile = "$baseUrl/user/profile";
-  static const String updateProfile = "$baseUrl/user/update";
+  static String get userProfile => "$baseUrl/user/profile";
+  static String get updateProfile => "$baseUrl/user/update";
 
   // Products
-  static const String getAllProducts = "$baseUrl/products";
-  static const String getProductById = "$baseUrl/products"; // + /{id}
+  static String get getAllProducts => "$baseUrl/products";
+  static String getProductById(String id) => "$baseUrl/products/$id";
 
   // Orders
-  static const String createOrder = "$baseUrl/orders";
-  static const String getOrderDetails = "$baseUrl/orders"; // + /{id}
+  static String get createOrder => "$baseUrl/orders";
+  static String getOrderDetails(String id) => "$baseUrl/orders/$id";
 }

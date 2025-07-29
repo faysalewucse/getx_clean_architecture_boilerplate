@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:getx_clean_architecture_boilerplate/src/core/utils/toast_utils.dart';
-import 'package:getx_clean_architecture_boilerplate/src/data/services/storage_service.dart';
+import 'package:getx_clean_architecture_boilerplate/src/core/services/storage_service.dart';
 import 'package:logger/logger.dart';
 
 class ApiInterceptor extends Interceptor {

@@ -25,6 +25,7 @@ class StorageService {
   void saveFCMToken(String token) {
     _storage.write(_fcmTokenKey, token);
   }
+
   String? getFCMToken() {
     return _storage.read<String>(_fcmTokenKey);
   }
@@ -59,10 +60,5 @@ class StorageService {
   /// Get Language Preference
   String? getLanguage() {
     return _storage.read<String>(_languageKey);
-  }
-
-  /// Remove All Stored Data (if needed)
-  void clearStorage() {
-    _storage.erase();
   }
 }

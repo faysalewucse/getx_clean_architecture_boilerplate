@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:getx_clean_architecture_boilerplate/src/presentation/routes/app_routes.dart';
+import 'package:getx_clean_architecture_boilerplate/src/presentation/views/auth/login_screen.dart';
 import 'package:getx_clean_architecture_boilerplate/src/presentation/views/home/home_screen.dart';
 import 'package:getx_clean_architecture_boilerplate/src/presentation/views/splash_screen.dart';
 
@@ -16,10 +17,10 @@ class AppPages{
       transitionDuration: const Duration(milliseconds: 300),
     ),
     // TODO: Add other routes when their screens are created
-    // GetPage(
-    //   name: signIn,
-    //   page: () => const SignInScreen(),
-    // ),
+    GetPage(
+      name: Routes.login,
+      page: () => const LoginScreen(),
+    ),
     // GetPage(
     //   name: profile,
     //   page: () => const ProfileScreen(),

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:getx_clean_architecture_boilerplate/src/controllers/theme_controller.dart';
+import 'package:getx_clean_architecture_boilerplate/src/presentation/routes/app_routes.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -27,22 +29,18 @@ class HomeScreen extends StatelessWidget {
             },
             icon: const Icon(Icons.notifications_outlined),
           ),
-          IconButton(
-            onPressed: () {
-              Get.snackbar(
-                'Settings',
-                'Settings screen coming soon',
-                snackPosition: SnackPosition.TOP,
-                backgroundColor: Theme.of(context).primaryColor.withValues(alpha: 0.1),
-                colorText: Theme.of(context).primaryColor,
-                icon: Icon(
-                  Icons.settings_outlined,
-                  color: Theme.of(context).primaryColor,
-                ),
-              );
-            },
-            icon: const Icon(Icons.settings_outlined),
-          ),
+          Obx(() {
+            final themeController = Get.find<ThemeController>();
+            final isDark = themeController.currentTheme.value == ThemeMode.dark;
+
+            return IconButton(
+              onPressed: () => themeController.switchTheme(),
+              icon: Icon(
+                isDark ? Icons.light_mode : Icons.dark_mode,
+                color: isDark ? Colors.white : Colors.black,
+              ),
+            );
+          })
         ],
       ),
       drawer: _buildDrawer(context),
@@ -215,8 +213,7 @@ class HomeScreen extends StatelessWidget {
                   icon: Icons.person,
                   title: 'Profile',
                   onTap: () {
-                    Get.back();
-                    _showComingSoon('Profile');
+                    Get.toNamed(Routes.login);
                   },
                 ),
                 _buildDrawerItem(
