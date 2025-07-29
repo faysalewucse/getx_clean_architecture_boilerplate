@@ -10,7 +10,7 @@ import 'package:getx_clean_architecture_boilerplate/src/core/services/storage_se
 import 'package:getx_clean_architecture_boilerplate/src/domain/repositories/auth_repository.dart';
 import 'package:getx_clean_architecture_boilerplate/src/domain/usecases/login_usecase.dart';
 import 'package:getx_clean_architecture_boilerplate/src/domain/usecases/is_user_logged_in_usecase.dart';
-import 'package:getx_clean_architecture_boilerplate/src/presentation/views/auth/auth.controller.dart';
+import 'package:getx_clean_architecture_boilerplate/src/presentation/views/auth/auth_controller.dart';
 import 'package:logger/logger.dart';
 
 class InitialScreenBindings implements Bindings {

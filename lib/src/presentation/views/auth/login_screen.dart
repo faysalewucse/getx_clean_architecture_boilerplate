@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:getx_clean_architecture_boilerplate/src/core/constants/app_paddings.dart';
-import 'package:getx_clean_architecture_boilerplate/src/presentation/views/auth/auth.controller.dart';
+import 'package:getx_clean_architecture_boilerplate/src/presentation/views/auth/auth_controller.dart';
 import 'package:getx_clean_architecture_boilerplate/src/shared/widgets/buttons/primary_button.dart';
 import 'package:getx_clean_architecture_boilerplate/src/core/utils/input_field_validators.dart';
 import 'package:getx_clean_architecture_boilerplate/src/shared/widgets/inputs/input_field.dart';
