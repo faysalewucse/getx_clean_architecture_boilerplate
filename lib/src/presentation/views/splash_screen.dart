@@ -16,17 +16,15 @@ class _SplashScreenState extends State<SplashScreen>
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
   late Animation<double> _scaleAnimation;
-  final NetworkController networkController = Get.find<NetworkController>();
-  final IsUserLoggedInUseCase isUserLoggedInUseCase =
-      Get.find<IsUserLoggedInUseCase>();
+  final networkController = Get.find<NetworkController>();
+  final isUserLoggedInUseCase = Get.find<IsUserLoggedInUseCase>();
 
   @override
   void initState() {
     super.initState();
     _initializeAnimations();
-    if (networkController.isConnected.value) {
-      _performStartupTasks();
-    }
+    debugPrint('SplashScreen initialized');
+    // Check internet connection on startup
   }
 
   void _initializeAnimations() {
@@ -46,83 +44,33 @@ class _SplashScreenState extends State<SplashScreen>
     _animationController.forward();
   }
 
-  Future<void> _performStartupTasks() async {
-    try {
-      // Wait for animations to start
-      await Future.delayed(const Duration(milliseconds: 500));
-
-      // Simulate API calls and initialization tasks
-      await _initializeServices();
-      await _checkUserAuthentication();
-      await _loadInitialData();
-
-      // Minimum splash screen display time
-      await Future.delayed(const Duration(milliseconds: 2000));
-
-      // Navigate to home screen only if network is connected and user is logged in
-      if (mounted && networkController.isConnected.value) {
-        if (isUserLoggedInUseCase.execute()) {
-          Get.offAllNamed(Routes.home);
-        } else {
-          Get.offAllNamed(Routes.login);
-        }
-      }
-    } catch (e) {
-      // Handle errors gracefully
-      _handleStartupError(e);
+  Future<void> _handlePostConnectionChecks() async {
+    // await _initializeServices();
+    // await _checkUserAuthentication();
+    // await _loadInitialData();
+    await Future.delayed(const Duration(milliseconds: 2000));
+    if (mounted) {
+      Get.offAllNamed(Routes.home);
     }
-  }
-
-  Future<void> _initializeServices() async {
-    // Initialize your services here
-    // Example: Analytics, Firebase, etc.
-    await Future.delayed(const Duration(milliseconds: 300));
-    debugPrint('Services initialized');
-  }
-
-  Future<void> _checkUserAuthentication() async {
-    // Check if user is logged in
-    // Example: Check token validity, user session, etc.
-    await Future.delayed(const Duration(milliseconds: 400));
-    debugPrint('User authentication checked');
-  }
-
-  Future<void> _loadInitialData() async {
-    // Load any initial data required by the app
-    // Example: User profile, app settings, cached data, etc.
-    await Future.delayed(const Duration(milliseconds: 500));
-    debugPrint('Initial data loaded');
-  }
-
-  void _handleStartupError(dynamic error) {
-    // Handle startup errors
-    debugPrint('Startup error: $error');
-
-    // Show error dialog or navigate to error screen
-    Get.snackbar(
-      'Error',
-      'Failed to initialize app. Please try again.',
-      snackPosition: SnackPosition.BOTTOM,
-      backgroundColor: Colors.red.withValues(alpha: 0.1),
-      colorText: Colors.red,
-    );
-
-    // Still navigate to home screen after a delay
-    Future.delayed(const Duration(seconds: 2), () {
-      if (mounted) {
-        Get.offAllNamed(Routes.home);
-      }
-    });
-  }
-
-  @override
-  void dispose() {
-    _animationController.dispose();
-    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    return FutureBuilder<bool>(
+      future: networkController.retryConnectionCheck(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return _buildSplashContent(context);
+        } else if (snapshot.hasData && snapshot.data == true) {
+          _handlePostConnectionChecks();
+          return _buildSplashContent(context);
+        }
+        return _buildSplashContent(context);
+      },
+    );
+  }
+
+  Widget _buildSplashContent(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).primaryColor,
       body: Center(
@@ -201,5 +149,14 @@ class _SplashScreenState extends State<SplashScreen>
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    if (_animationController.isAnimating || _animationController.isCompleted) {
+      _animationController.stop();
+    }
+    _animationController.dispose();
+    super.dispose();
   }
 }

@@ -1,7 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:get/get.dart';
 import 'package:getx_clean_architecture_boilerplate/src/controllers/global_controller.dart';
-import 'package:getx_clean_architecture_boilerplate/src/controllers/network_controller.dart';
 import 'package:getx_clean_architecture_boilerplate/src/core/network/api_client.dart';
 import 'package:getx_clean_architecture_boilerplate/src/data/datasources/auth_remote_data_sources.dart';
 import 'package:getx_clean_architecture_boilerplate/src/data/datasources/auth_remote_data_source_impl.dart';
@@ -19,35 +18,24 @@ class InitialScreenBindings implements Bindings {
   @override
   void dependencies() {
     // Initialize core services first
-    Get.lazyPut<Logger>(() => Logger());
-    Get.lazyPut<StorageService>(
-      () => StorageService(),
-    ); // Add StorageService registration
+    Get.put<Logger>(Logger());
+    Get.put<StorageService>(StorageService());
 
     // Initialize API client with dependencies
-    Get.lazyPut<Dio>(
-      () => ApiClient(Get.find<StorageService>(), Get.find<Logger>()).dio,
-    );
+    Get.put<Dio>(ApiClient(Get.find<StorageService>(), Get.find<Logger>()).dio);
 
     // Data sources
-    Get.lazyPut<AuthRemoteDataSource>(
-      () => AuthRemoteDataSourceImpl(client: Get.find<Dio>()),
-    );
+    Get.put<AuthRemoteDataSource>(AuthRemoteDataSourceImpl(client: Get.find<Dio>()));
 
     // Repositories - Use the concrete implementation, not the abstract class
-    Get.lazyPut<AuthRepository>(
-      () => AuthRepositoryImpl(
-        remoteDataSource: Get.find<AuthRemoteDataSource>(),
-      ),
-    );
+    Get.put<AuthRepository>(AuthRepositoryImpl(remoteDataSource: Get.find<AuthRemoteDataSource>()));
 
     // Use cases
-    Get.lazyPut(() => LoginUseCase(Get.find<AuthRepository>()));
-    Get.lazyPut(() => IsUserLoggedInUseCase(Get.find<AuthRepository>()));
+    Get.put<LoginUseCase>(LoginUseCase(Get.find<AuthRepository>()));
+    Get.put<IsUserLoggedInUseCase>(IsUserLoggedInUseCase(Get.find<AuthRepository>()));
 
     // Controllers
-    Get.put(GlobalController());
-    Get.put(NetworkController());
-    Get.lazyPut(() => AuthController());
+    Get.put<GlobalController>(GlobalController());
+    Get.put<AuthController>(AuthController());
   }
 }

@@ -13,22 +13,6 @@ class HomeScreen extends StatelessWidget {
         title: const Text('GetX Boilerplate'),
         titleSpacing: 0,
         actions: [
-          IconButton(
-            onPressed: () {
-              Get.snackbar(
-                'Notifications',
-                'No new notifications available',
-                snackPosition: SnackPosition.TOP,
-                backgroundColor: Theme.of(context).primaryColor.withValues(alpha: 0.1),
-                colorText: Theme.of(context).primaryColor,
-                icon: Icon(
-                  Icons.notifications_outlined,
-                  color: Theme.of(context).primaryColor,
-                ),
-              );
-            },
-            icon: const Icon(Icons.notifications_outlined),
-          ),
           Obx(() {
             final themeController = Get.find<ThemeController>();
             final isDark = themeController.currentTheme.value == ThemeMode.dark;

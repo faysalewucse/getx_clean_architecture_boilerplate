@@ -15,10 +15,10 @@ class NetworkController extends GetxController {
     super.onInit();
     initConnectivity();
 
-    _connectivitySubscription =
-        _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
+    _connectivitySubscription = _connectivity.onConnectivityChanged.listen(
+      _updateConnectionStatus,
+    );
   }
-
 
   Future<void> initConnectivity() async {
     late List<ConnectivityResult> result;
@@ -33,7 +33,8 @@ class NetworkController extends GetxController {
   }
 
   Future<void> _updateConnectionStatus(
-      List<ConnectivityResult> connectivityResult) async {
+    List<ConnectivityResult> connectivityResult,
+  ) async {
     if (connectivityResult.contains(ConnectivityResult.none)) {
       isConnected(false);
       DialogUtils.showNoInternetDialog();
@@ -48,6 +49,7 @@ class NetworkController extends GetxController {
       closeDialog();
       return true;
     } else {
+      DialogUtils.showNoInternetDialog();
       isConnected(false);
       return false;
     }

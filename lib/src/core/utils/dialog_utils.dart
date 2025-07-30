@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:getx_clean_architecture_boilerplate/src/controllers/network_controller.dart';
 import 'package:getx_clean_architecture_boilerplate/src/core/constants/app_radius.dart';
 import 'package:getx_clean_architecture_boilerplate/src/core/constants/app_colors.dart';
+import 'package:getx_clean_architecture_boilerplate/src/presentation/routes/app_routes.dart';
 import 'package:getx_clean_architecture_boilerplate/src/shared/widgets/buttons/primary_button.dart';
 
 class DialogUtils {
@@ -34,7 +35,13 @@ class DialogUtils {
                 const SizedBox(height: 16),
                 PrimaryButton(
                   onPressed: () async {
-                    await networkController.retryConnectionCheck();
+                    if(Get.routing.current == Routes.initialRoute){
+                      Get.offAndToNamed(Routes.initialRoute);
+                    }
+                    else{
+                      Get.back();
+                      await networkController.retryConnectionCheck();
+                    }
                   },
                   label: 'retry'.tr,
                 ),
