@@ -54,9 +54,11 @@ class AuthController extends GetxController {
       final user = await loginUseCase.execute(loginReqModel: params);
       _isLoading.value = false;
       _user.value = user;
+      isUserLoggedIn.value = true;
       Get.offAllNamed(Routes.home);
       ToastUtils.showSuccessToast(message: 'Welcome back, ${user.name}!');
     } catch (e) {
+      isUserLoggedIn.value = false;
       _isLoading.value = false;
       ToastUtils.showErrorToast(message: e.toString());
     }

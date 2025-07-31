@@ -13,8 +13,11 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   @override
   Future<LoginResponseModel?> login(LoginRequestModel request) async {
     try {
-      final response = await client.post(ApiUrls.login, data: request.toJson());
-      return LoginResponseModel.fromJson(response.data);
+      // final response = await client.post(ApiUrls.login, data: request.toJson());
+      // return LoginResponseModel.fromJson(response.data);
+      await Future.delayed(const Duration(seconds: 2));
+      // Fake response for testing
+      return LoginResponseModel(token: 'fake_token', name: "Faysal Ahmed", id: '123456');
     } catch (e) {
       debugPrint("🔴 myError: AuthRemoteDataSourceImpl : login() : $e");
     }

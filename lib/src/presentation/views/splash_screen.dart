@@ -24,7 +24,16 @@ class _SplashScreenState extends State<SplashScreen>
     super.initState();
     _initializeAnimations();
     debugPrint('SplashScreen initialized');
-    // Check internet connection on startup
+    _checkConnectionAndNavigate();
+  }
+
+  Future<void> _checkConnectionAndNavigate() async {
+    final hasConnection = await networkController.retryConnectionCheck();
+    if (hasConnection) {
+      await _handlePostConnectionChecks();
+    } else {
+      // Handle no connection scenario if needed
+    }
   }
 
   void _initializeAnimations() {
@@ -56,18 +65,7 @@ class _SplashScreenState extends State<SplashScreen>
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<bool>(
-      future: networkController.retryConnectionCheck(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return _buildSplashContent(context);
-        } else if (snapshot.hasData && snapshot.data == true) {
-          _handlePostConnectionChecks();
-          return _buildSplashContent(context);
-        }
-        return _buildSplashContent(context);
-      },
-    );
+    return _buildSplashContent(context);
   }
 
   Widget _buildSplashContent(BuildContext context) {

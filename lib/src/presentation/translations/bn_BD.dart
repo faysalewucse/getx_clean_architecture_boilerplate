@@ -30,4 +30,11 @@ const Map<String, String> bnBD = {
   'connection_error': 'ইন্টারনেট সংযোগে সমস্যা হয়েছে।',
   'success': 'অপারেশন সফল হয়েছে।',
   'failure': 'অপারেশন ব্যর্থ হয়েছে। আবার চেষ্টা করুন।',
+  'mandatoryUpdateTitle': 'বাধ্যতামূলক আপডেট',
+  'optionalUpdateTitle': 'ঐচ্ছিক আপডেট',
+  'mandatoryUpdateMessage': 'অ্যাপটি চালিয়ে যেতে একটি নতুন সংস্করণ প্রয়োজন।',
+  'optionalUpdateMessage': 'অ্যাপটির একটি নতুন সংস্করণ উপলব্ধ। আপনি কি আপডেট করতে চান?',
+  'later': 'পরে',
+  'exit': 'প্রস্থান',
+  'update': 'আপডেট',
 };

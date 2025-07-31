@@ -1,33 +1,4 @@
-class AppStrings{
+class AppStrings {
   static const String appName = 'MyApp';
-  static const String welcomeMessage = 'Welcome to MyApp!';
-  static const String errorMessage = 'An error occurred. Please try again.';
-  static const String loadingMessage = 'Loading, please wait...';
-  static const String noDataMessage = 'No data available.';
-  static const String retryButtonText = 'Retry';
-  static const String okButtonText = 'OK';
-  static const String cancelButtonText = 'Cancel';
-  static const String settings = 'Settings';
-  static const String about = 'About';
-  static const String help = 'Help';
-  static const String privacyPolicy = 'Privacy Policy';
-  static const String termsOfService = 'Terms of Service';
-  static const String logout = 'Logout';
-  static const String login = 'Login';
-  static const String register = 'Register';
-  static const String username = 'Username';
-  static const String password = 'Password';
-  static const String email = 'Email';
-  static const String confirmPassword = 'Confirm Password';
-  static const String forgotPassword = 'Forgot Password?';
-  static const String resetPassword = 'Reset Password';
-  static const String profile = 'Profile';
-  static const String updateProfile = 'Update Profile';
-  static const String changePassword = 'Change Password';
-  static const String deleteAccount = 'Delete Account';
-  static const String search = 'Search';
-  static const String noResultsFound = 'No results found.';
-  static const String connectionError = 'Connection error. Please check your internet.';
-  static const String successMessage = 'Operation completed successfully.';
-  static const String failureMessage = 'Operation failed. Please try again.';
+  static const playStoreUrl = 'https://play.google.com/store/apps/details?id=com.example.app';
 }

@@ -33,4 +33,11 @@ const Map<String, String> enUS = {
   'no_internet_connection': 'No Internet Connection',
   'please_check_your_internet_connection':
       'Please turn on your wifi or mobile data and try again.',
+  'mandatoryUpdateTitle': 'Mandatory Update',
+  'optionalUpdateTitle': 'Optional Update',
+  'mandatoryUpdateMessage': 'A newer version of the app is required to continue.',
+  'optionalUpdateMessage': 'A newer version of the app is available. Would you like to update?',
+  'later': 'Later',
+  'exit': 'Exit',
+  'update': 'Update',
 };

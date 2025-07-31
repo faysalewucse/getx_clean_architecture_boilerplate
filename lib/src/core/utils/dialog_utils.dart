@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:getx_clean_architecture_boilerplate/src/controllers/network_controller.dart';
-import 'package:getx_clean_architecture_boilerplate/src/core/constants/app_radius.dart';
-import 'package:getx_clean_architecture_boilerplate/src/core/constants/app_colors.dart';
+import 'package:getx_clean_architecture_boilerplate/src/core/constants/app_strings.dart';
+import 'package:getx_clean_architecture_boilerplate/src/core/utils/url_launcher_utils.dart';
 import 'package:getx_clean_architecture_boilerplate/src/presentation/routes/app_routes.dart';
 import 'package:getx_clean_architecture_boilerplate/src/shared/widgets/buttons/primary_button.dart';
 
@@ -13,9 +13,7 @@ class DialogUtils {
 
       Get.dialog(
         Dialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(0),
-          ),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(0)),
           child: Padding(
             padding: const EdgeInsets.all(16),
             child: Column(
@@ -35,10 +33,9 @@ class DialogUtils {
                 const SizedBox(height: 16),
                 PrimaryButton(
                   onPressed: () async {
-                    if(Get.routing.current == Routes.initialRoute){
+                    if (Get.routing.current == Routes.initialRoute) {
                       Get.offAndToNamed(Routes.initialRoute);
-                    }
-                    else{
+                    } else {
                       Get.back();
                       await networkController.retryConnectionCheck();
                     }
@@ -64,57 +61,33 @@ class DialogUtils {
       PopScope(
         canPop: !mustUpdate,
         child: AlertDialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: AppRadius.radius10,
-          ),
-          title: const Text("Update Available!"),
+          title: Text(mustUpdate ? 'mandatoryUpdateTitle'.tr : 'optionalUpdateTitle'.tr),
           content: Text(
             mustUpdate
-                ? "You must update to keep using Mediwhole."
-                : "A new version of Mediwhole is available. Please update to the latest version.",
-            textAlign: TextAlign.justify,
-            style: TextStyle(color: AppColors.secondary, fontSize: 14),
+                ? 'mandatoryUpdateMessage'.tr
+                : 'optionalUpdateMessage'.tr,
           ),
           actions: [
             if (!mustUpdate)
               TextButton(
                 onPressed: () => Get.back(),
-                style: TextButton.styleFrom(
-                  backgroundColor: Colors.red.shade50,
-                  foregroundColor: Colors.red,
-                  side: const BorderSide(color: Colors.red),
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 24,
-                    vertical: 12,
-                  ),
-                ),
-                child: const Text(
-                  "Later",
-                  style: TextStyle(fontWeight: FontWeight.w500, fontSize: 14),
-                ),
+                child: Text('later'.tr),
+              ),
+            if (mustUpdate)
+              TextButton(
+                onPressed: () => Get.close(0), // Exit the app
+                child: Text('exit'.tr),
               ),
             TextButton(
               onPressed: () async {
-
+                await UrlLauncherUtils.openUrl(AppStrings.playStoreUrl);
               },
-              style: TextButton.styleFrom(
-                backgroundColor: Colors.green.shade50,
-                foregroundColor: Colors.green,
-                side: const BorderSide(color: Colors.green),
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 24,
-                  vertical: 12,
-                ),
-              ),
-              child: const Text(
-                "Update",
-                style: TextStyle(fontWeight: FontWeight.w500, fontSize: 14),
-              ),
+              child: Text('update'.tr),
             ),
           ],
         ),
       ),
-      barrierDismissible: !mustUpdate, // disables tap outside to close
+      barrierDismissible: !mustUpdate,
     );
   }
 }

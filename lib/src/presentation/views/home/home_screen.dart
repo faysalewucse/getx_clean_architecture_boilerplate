@@ -2,13 +2,55 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:getx_clean_architecture_boilerplate/src/controllers/theme_controller.dart';
 import 'package:getx_clean_architecture_boilerplate/src/presentation/routes/app_routes.dart';
+import 'package:getx_clean_architecture_boilerplate/src/domain/usecases/check_app_version_usecase.dart';
+import 'package:getx_clean_architecture_boilerplate/src/data/repositories/app_version_repository_impl.dart';
+import 'package:getx_clean_architecture_boilerplate/src/core/utils/dialog_utils.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
   @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  bool _hasCheckedVersion = false;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) => _checkAppVersion(context));
+  }
+
+  Future<void> _checkAppVersion(BuildContext context) async {
+    if (_hasCheckedVersion) return;
+    _hasCheckedVersion = true;
+
+    final useCase = CheckAppVersionUseCase(AppVersionRepositoryImpl());
+    final appVersion = await useCase.call();
+
+    final packageInfo = await PackageInfo.fromPlatform();
+    final buildVersion = int.tryParse(packageInfo.buildNumber) ?? 1; // Fallback to 1 if parsing fails
+
+    if (buildVersion < appVersion.minimumAppVersion) {
+      DialogUtils.showUpdateDialog(
+        currentVersion: buildVersion,
+        minimumVersion: appVersion.minimumAppVersion,
+      );
+    } else if (buildVersion < appVersion.currentAppVersion) {
+      DialogUtils.showUpdateDialog(
+        currentVersion: buildVersion,
+        minimumVersion: appVersion.minimumAppVersion,
+      );
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
+
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       appBar: AppBar(
         title: const Text('GetX Boilerplate'),
         titleSpacing: 0,
