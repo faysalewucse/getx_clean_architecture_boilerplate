@@ -1,17 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../domain/entities/product_entity.dart';
-import '../domain/usecases/get_products_usecase.dart';
-import '../data/repositories/products_repository_impl.dart';
-import '../data/datasources/products_remote_data_source_impl.dart';
-import '../core/network/api_client.dart';
-import '../core/services/storage_service.dart';
-import 'package:logger/logger.dart';
+import 'package:getx_clean_architecture_boilerplate/src/domain/entities/product_entity.dart';
+import 'package:getx_clean_architecture_boilerplate/src/domain/usecases/get_products_usecase.dart';
 
 class ProductsController extends GetxController {
-  late final GetProductsUseCase _getProductsUseCase;
-  late final GetCategoriesUseCase _getCategoriesUseCase;
-  late final GetProductsByCategoryUseCase _getProductsByCategoryUseCase;
+  final GetProductsUseCase _getProductsUseCase;
+  final GetCategoriesUseCase _getCategoriesUseCase;
+  final GetProductsByCategoryUseCase _getProductsByCategoryUseCase;
+
+  ProductsController({
+    GetProductsUseCase? getProductsUseCase,
+    GetCategoriesUseCase? getCategoriesUseCase,
+    GetProductsByCategoryUseCase? getProductsByCategoryUseCase,
+  })  : _getProductsUseCase = getProductsUseCase ?? Get.find<GetProductsUseCase>(),
+        _getCategoriesUseCase = getCategoriesUseCase ?? Get.find<GetCategoriesUseCase>(),
+        _getProductsByCategoryUseCase = getProductsByCategoryUseCase ?? Get.find<GetProductsByCategoryUseCase>();
 
   final ScrollController scrollController = ScrollController();
 
@@ -31,19 +34,8 @@ class ProductsController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    _initializeUseCases();
     _loadInitialData();
     _setupScrollListener();
-  }
-
-  void _initializeUseCases() {
-    final apiClient = ApiClient(StorageService(), Logger());
-    final remoteDataSource = ProductsRemoteDataSourceImpl(apiClient: apiClient);
-    final repository = ProductsRepositoryImpl(remoteDataSource: remoteDataSource);
-
-    _getProductsUseCase = GetProductsUseCase(repository);
-    _getCategoriesUseCase = GetCategoriesUseCase(repository);
-    _getProductsByCategoryUseCase = GetProductsByCategoryUseCase(repository);
   }
 
   void _setupScrollListener() {

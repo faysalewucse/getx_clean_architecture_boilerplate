@@ -23,7 +23,8 @@ class InitialScreenBindings implements Bindings {
     Get.put<StorageService>(StorageService());
 
     // Initialize API client with dependencies
-    Get.put<Dio>(ApiClient(Get.find<StorageService>(), Get.find<Logger>()).dio);
+    Get.put<ApiClient>(ApiClient(Get.find<StorageService>(), Get.find<Logger>()));
+    Get.put<Dio>(Get.find<ApiClient>().dio);
 
     // Data sources
     Get.put<AuthRemoteDataSource>(AuthRemoteDataSourceImpl(client: Get.find<Dio>()));

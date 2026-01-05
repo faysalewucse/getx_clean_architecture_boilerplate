@@ -12,24 +12,17 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
 
   @override
   Future<LoginResponseModel?> login(LoginRequestModel request) async {
-    try {
-      // final response = await client.post(ApiUrls.login, data: request.toJson());
-      // return LoginResponseModel.fromJson(response.data);
-      await Future.delayed(const Duration(seconds: 2));
-      // Fake response for testing
-      return LoginResponseModel(token: 'fake_token', name: "Faysal Ahmed", id: '123456');
-    } catch (e) {
-      debugPrint("🔴 myError: AuthRemoteDataSourceImpl : login() : $e");
-    }
-    return null;
+    // Remove try-catch - let interceptor handle errors
+    // final response = await client.post(ApiUrls.login, data: request.toJson());
+    // return LoginResponseModel.fromJson(response.data);
+
+    // Fake response for testing
+    await Future.delayed(const Duration(seconds: 2));
+    return LoginResponseModel(token: 'fake_token', name: "Faysal Ahmed", id: '123456');
   }
 
   @override
   Future<void> logout() async {
-    try {
-      await client.post(ApiUrls.logout);
-    } catch (e) {
-      debugPrint("🔴 myError: AuthRemoteDataSourceImpl : logout() : $e");
-    }
+    await client.post(ApiUrls.logout);
   }
 }
