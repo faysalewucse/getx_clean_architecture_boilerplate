@@ -15,6 +15,8 @@ class ApiUrls {
   // Products
   static String get getAllProducts => "$baseUrl/products";
   static String getProductById(String id) => "$baseUrl/products/$id";
+  static String get getCategories => "$baseUrl/products/categories";
+  static String getProductsByCategory(String category) => "$baseUrl/products/category/$category";
 
   // Orders
   static String get createOrder => "$baseUrl/orders";

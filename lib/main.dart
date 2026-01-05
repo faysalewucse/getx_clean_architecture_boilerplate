@@ -32,19 +32,21 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     final themeController = Get.find<ThemeController>();
     return ToastificationWrapper(
-      child: Obx(() => GetMaterialApp(
-            debugShowCheckedModeBanner: false,
-            title: 'Getx Boilerplate',
-            initialBinding: InitialScreenBindings(),
-            locale: const Locale('en', 'US'),
-            fallbackLocale: const Locale('en', 'US'),
-            translations: AppTranslations(),
-            theme: AppTheme.lightTheme,
-            darkTheme: AppTheme.darkTheme,
-            themeMode: themeController.currentTheme.value,
-            initialRoute: Routes.initialRoute,
-            getPages: AppPages.pages,
-          )),
+      child: Obx(
+        () => GetMaterialApp(
+          debugShowCheckedModeBanner: false,
+          title: 'Getx Boilerplate',
+          initialBinding: InitialScreenBindings(),
+          locale: const Locale('en', 'US'),
+          fallbackLocale: const Locale('en', 'US'),
+          translations: AppTranslations(),
+          theme: AppTheme.lightTheme,
+          darkTheme: AppTheme.darkTheme,
+          themeMode: themeController.currentTheme.value,
+          initialRoute: Routes.initialRoute,
+          getPages: AppPages.pages,
+        ),
+      ),
     );
   }
 }

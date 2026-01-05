@@ -1,9 +1,9 @@
 import 'package:flutter/foundation.dart';
 
 class AppEnvironment {
-  static const String _debugBaseUrl = "https://dev-api.example.com";
-  static const String _releaseBaseUrl = "https://api.example.com";
-  static const String _debugInReleaseBaseUrl = "https://staging-api.example.com";
+  static const String _debugBaseUrl = "https://fakestoreapi.com";
+  static const String _releaseBaseUrl = "https://fakestoreapi.com";
+  static const String _debugInReleaseBaseUrl = "https://fakestoreapi.com";
 
   /// Use this flag to force debug API even in release build
   static const bool forceDebugApi =

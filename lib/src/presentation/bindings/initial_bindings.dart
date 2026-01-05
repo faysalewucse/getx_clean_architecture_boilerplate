@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:get/get.dart';
 import 'package:getx_clean_architecture_boilerplate/src/controllers/global_controller.dart';
+import 'package:getx_clean_architecture_boilerplate/src/controllers/screen_controller.dart';
 import 'package:getx_clean_architecture_boilerplate/src/core/network/api_client.dart';
 import 'package:getx_clean_architecture_boilerplate/src/data/datasources/auth_remote_data_sources.dart';
 import 'package:getx_clean_architecture_boilerplate/src/data/datasources/auth_remote_data_source_impl.dart';
@@ -36,6 +37,7 @@ class InitialScreenBindings implements Bindings {
 
     // Controllers
     Get.put<GlobalController>(GlobalController());
+    Get.put<ScreenController>(ScreenController());
     Get.put<AuthController>(AuthController());
   }
 }
