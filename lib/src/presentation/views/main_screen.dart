@@ -63,6 +63,20 @@ class _MainScreenState extends State<MainScreen> {
       appBar: AppBar(
         title: const Text('GetX Boilerplate'),
         titleSpacing: 0,
+        leading: Obx(() {
+          final themeController = Get.find<ThemeController>();
+          final isDark = themeController.currentTheme.value == ThemeMode.dark;
+
+          return Builder(
+            builder: (context) => IconButton(
+              icon: Icon(
+                PhosphorIconsRegular.sidebar,
+                color: isDark ? Colors.white : Colors.black,
+              ),
+              onPressed: () => Scaffold.of(context).openDrawer(),
+            ),
+          );
+        }),
         actions: [
           Obx(() {
             final themeController = Get.find<ThemeController>();
@@ -73,7 +87,7 @@ class _MainScreenState extends State<MainScreen> {
               child: IconButton(
                 onPressed: () => themeController.switchTheme(),
                 icon: Icon(
-                  isDark ? Icons.light_mode : Icons.dark_mode,
+                  isDark ? PhosphorIconsRegular.sun : PhosphorIconsRegular.moon,
                   color: isDark ? Colors.white : Colors.black,
                 ),
               ),
@@ -144,8 +158,8 @@ class _MainScreenState extends State<MainScreen> {
               ),
             items: [
               _buildNavItem(
-                PhosphorIconsRegular.house,
-                PhosphorIconsFill.house,
+                PhosphorIconsRegular.houseLine,
+                PhosphorIconsFill.houseLine,
                 'Home',
                 0,
                 currentIndex,
@@ -254,7 +268,7 @@ class _MainScreenState extends State<MainScreen> {
                     CircleAvatar(
                       radius: 30,
                       backgroundColor: Colors.white,
-                      child: Icon(Icons.person, size: 35, color: Colors.blue),
+                      child: Icon(PhosphorIconsFill.user, size: 35, color: Colors.blue),
                     ),
                     SizedBox(height: 12),
                     Text(
@@ -281,21 +295,21 @@ class _MainScreenState extends State<MainScreen> {
               padding: EdgeInsets.zero,
               children: [
                 _buildDrawerItem(
-                  icon: Icons.home,
+                  icon: PhosphorIconsRegular.houseLine,
                   title: 'Home',
                   onTap: () {
                     Get.back();
                   },
                 ),
                 _buildDrawerItem(
-                  icon: Icons.person,
+                  icon: PhosphorIconsRegular.user,
                   title: 'Profile',
                   onTap: () {
                     Get.toNamed(Routes.login);
                   },
                 ),
                 _buildDrawerItem(
-                  icon: Icons.settings,
+                  icon: PhosphorIconsRegular.gear,
                   title: 'Settings',
                   onTap: () {
                     Get.back();
@@ -303,7 +317,7 @@ class _MainScreenState extends State<MainScreen> {
                   },
                 ),
                 _buildDrawerItem(
-                  icon: Icons.info,
+                  icon: PhosphorIconsRegular.info,
                   title: 'About',
                   onTap: () {
                     Get.back();
@@ -312,7 +326,7 @@ class _MainScreenState extends State<MainScreen> {
                 ),
                 const Divider(),
                 _buildDrawerItem(
-                  icon: Icons.help,
+                  icon: PhosphorIconsRegular.question,
                   title: 'Help & Support',
                   onTap: () {
                     Get.back();
@@ -320,7 +334,7 @@ class _MainScreenState extends State<MainScreen> {
                   },
                 ),
                 _buildDrawerItem(
-                  icon: Icons.feedback,
+                  icon: PhosphorIconsRegular.chatCenteredDots,
                   title: 'Feedback',
                   onTap: () {
                     Get.back();
@@ -328,7 +342,7 @@ class _MainScreenState extends State<MainScreen> {
                   },
                 ),
                 _buildDrawerItem(
-                  icon: Icons.logout,
+                  icon: PhosphorIconsRegular.signOut,
                   title: 'Logout',
                   onTap: () {
                     Get.back();
@@ -373,7 +387,7 @@ class _MainScreenState extends State<MainScreen> {
       snackPosition: SnackPosition.BOTTOM,
       backgroundColor: Colors.blue.withValues(alpha: 0.1),
       colorText: Colors.blue,
-      icon: const Icon(Icons.info_outline, color: Colors.blue),
+      icon: const Icon(PhosphorIconsRegular.info, color: Colors.blue),
       margin: const EdgeInsets.all(16),
       borderRadius: 8,
       duration: const Duration(seconds: 3),
@@ -435,7 +449,7 @@ class _MainScreenState extends State<MainScreen> {
                 snackPosition: SnackPosition.BOTTOM,
                 backgroundColor: Colors.green.withValues(alpha: 0.1),
                 colorText: Colors.green,
-                icon: const Icon(Icons.check_circle, color: Colors.green),
+                icon: const Icon(PhosphorIconsRegular.checkCircle, color: Colors.green),
               );
             },
             style: TextButton.styleFrom(foregroundColor: Colors.red),
