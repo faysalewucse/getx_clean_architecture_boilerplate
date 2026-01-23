@@ -6,6 +6,7 @@ import 'package:getx_clean_architecture_boilerplate/src/presentation/views/auth/
 import 'package:getx_clean_architecture_boilerplate/src/presentation/routes/app_routes.dart';
 import 'package:getx_clean_architecture_boilerplate/src/core/utils/size_utils.dart';
 import 'package:getx_clean_architecture_boilerplate/src/core/constants/nav_ids.dart';
+import 'package:getx_clean_architecture_boilerplate/src/core/constants/app_colors.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -88,9 +89,8 @@ class ProfileScreen extends StatelessWidget {
                     final userName = authController.user?.name ?? 'User Name';
                     return Text(
                       userName,
-                      style: const TextStyle(
+                      style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                         color: Colors.white,
-                        fontSize: 24,
                         fontWeight: FontWeight.bold,
                       ),
                     );
@@ -98,11 +98,10 @@ class ProfileScreen extends StatelessWidget {
                   8.kH,
 
                   // User Email
-                  const Text(
+                  Text(
                     'user@example.com',
-                    style: TextStyle(
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                       color: Colors.white70,
-                      fontSize: 14,
                     ),
                   ),
                 ],
@@ -114,7 +113,7 @@ class ProfileScreen extends StatelessWidget {
               margin: const EdgeInsets.all(20),
               padding: const EdgeInsets.symmetric(vertical: 20),
               decoration: BoxDecoration(
-                color: isDark ? const Color(0xFF1E1E1E) : Colors.white,
+                color: isDark ? AppColors.surfaceDark : AppColors.surface,
                 borderRadius: BorderRadius.circular(16),
                 boxShadow: [
                   BoxShadow(
@@ -136,7 +135,7 @@ class ProfileScreen extends StatelessWidget {
                   Container(
                     height: 40,
                     width: 1,
-                    color: Colors.grey.withValues(alpha: 0.3),
+                    color: isDark ? AppColors.dividerDark : AppColors.divider,
                   ),
                   _buildStatItem(
                     icon: PhosphorIconsRegular.heart,
@@ -147,7 +146,7 @@ class ProfileScreen extends StatelessWidget {
                   Container(
                     height: 40,
                     width: 1,
-                    color: Colors.grey.withValues(alpha: 0.3),
+                    color: isDark ? AppColors.dividerDark : AppColors.divider,
                   ),
                   _buildStatItem(
                     icon: PhosphorIconsRegular.star,
@@ -167,10 +166,9 @@ class ProfileScreen extends StatelessWidget {
                 children: [
                   Text(
                     'Account Settings',
-                    style: TextStyle(
-                      fontSize: 16,
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                      color: isDark ? AppColors.neutral400 : AppColors.neutral600,
                       fontWeight: FontWeight.w600,
-                      color: Colors.grey[600],
                     ),
                   ),
                   12.kH,
@@ -199,10 +197,10 @@ class ProfileScreen extends StatelessWidget {
                             snackPosition: SnackPosition.BOTTOM,
                           );
                         },
-                        trailing: Switch(
+                        trailing: _buildCustomSwitch(
                           value: true,
                           onChanged: (value) {},
-                          activeTrackColor: Theme.of(context).primaryColor,
+                          isDark: isDark,
                         ),
                       ),
                       _buildDivider(),
@@ -220,10 +218,9 @@ class ProfileScreen extends StatelessWidget {
 
                   Text(
                     'Preferences',
-                    style: TextStyle(
-                      fontSize: 16,
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                      color: isDark ? AppColors.neutral400 : AppColors.neutral600,
                       fontWeight: FontWeight.w600,
-                      color: Colors.grey[600],
                     ),
                   ),
                   12.kH,
@@ -236,14 +233,14 @@ class ProfileScreen extends StatelessWidget {
                         final isDarkMode =
                             themeController.currentTheme.value == ThemeMode.dark;
                         return _buildMenuItem(
-                          icon: PhosphorIconsRegular.moon,
+                          icon: isDarkMode ? PhosphorIconsRegular.moon : PhosphorIconsRegular.sun,
                           title: 'Dark Mode',
                           subtitle: 'Switch to ${isDarkMode ? 'light' : 'dark'} theme',
                           onTap: () => themeController.switchTheme(),
-                          trailing: Switch(
+                          trailing: _buildCustomSwitch(
                             value: isDarkMode,
                             onChanged: (value) => themeController.switchTheme(),
-                            activeTrackColor: Theme.of(context).primaryColor,
+                            isDark: isDark,
                           ),
                         );
                       }),
@@ -266,10 +263,9 @@ class ProfileScreen extends StatelessWidget {
 
                   Text(
                     'Support',
-                    style: TextStyle(
-                      fontSize: 16,
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                      color: isDark ? AppColors.neutral400 : AppColors.neutral600,
                       fontWeight: FontWeight.w600,
-                      color: Colors.grey[600],
                     ),
                   ),
                   12.kH,
@@ -322,12 +318,9 @@ class ProfileScreen extends StatelessWidget {
                         ),
                       ),
                       icon: const Icon(PhosphorIconsRegular.signOut),
-                      label: const Text(
+                      label: Text(
                         'Logout',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                        ),
+                        style: Theme.of(context).textTheme.titleMedium,
                       ),
                     ),
                   ),
@@ -347,33 +340,38 @@ class ProfileScreen extends StatelessWidget {
     required String value,
     required Color color,
   }) {
-    return Column(
-      children: [
-        Icon(icon, color: color, size: 28),
-        8.kH,
-        Text(
-          value,
-          style: const TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        4.kH,
-        Text(
-          label,
-          style: TextStyle(
-            fontSize: 12,
-            color: Colors.grey[600],
-          ),
-        ),
-      ],
+    return Builder(
+      builder: (context) {
+        final themeController = Get.find<ThemeController>();
+        final isDark = themeController.currentTheme.value == ThemeMode.dark;
+
+        return Column(
+          children: [
+            Icon(icon, color: color, size: 28),
+            8.kH,
+            Text(
+              value,
+              style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            4.kH,
+            Text(
+              label,
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                color: isDark ? AppColors.neutral500 : AppColors.neutral600,
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 
   Widget _buildMenuCard(BuildContext context, bool isDark, List<Widget> children) {
     return Container(
       decoration: BoxDecoration(
-        color: isDark ? const Color(0xFF1E1E1E) : Colors.white,
+        color: isDark ? AppColors.surfaceDark : AppColors.surface,
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
@@ -394,121 +392,183 @@ class ProfileScreen extends StatelessWidget {
     required VoidCallback onTap,
     Widget? trailing,
   }) {
-    return ListTile(
-      onTap: trailing == null ? onTap : null,
-      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      leading: Container(
-        padding: const EdgeInsets.all(10),
-        decoration: BoxDecoration(
-          color: Colors.blue.withValues(alpha: 0.1),
-          borderRadius: BorderRadius.circular(10),
-        ),
-        child: Icon(icon, color: Colors.blue, size: 24),
-      ),
-      title: Text(
-        title,
-        style: const TextStyle(
-          fontSize: 16,
-          fontWeight: FontWeight.w600,
-        ),
-      ),
-      subtitle: Text(
-        subtitle,
-        style: TextStyle(
-          fontSize: 12,
-          color: Colors.grey[600],
-        ),
-      ),
-      trailing: trailing ??
-          Icon(
-            PhosphorIconsRegular.caretRight,
-            color: Colors.grey[400],
-            size: 20,
+    return Builder(
+      builder: (context) {
+        final themeController = Get.find<ThemeController>();
+        final isDark = themeController.currentTheme.value == ThemeMode.dark;
+
+        return ListTile(
+          onTap: trailing == null ? onTap : null,
+          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          leading: Container(
+            padding: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              color: Colors.blue.withValues(alpha: 0.1),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Icon(icon, color: Colors.blue, size: 24),
           ),
+          title: Text(
+            title,
+            style: Theme.of(context).textTheme.titleMedium,
+          ),
+          subtitle: Text(
+            subtitle,
+            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+              color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondary,
+            ),
+          ),
+          trailing: trailing ??
+              Icon(
+                PhosphorIconsRegular.caretRight,
+                color: isDark ? AppColors.neutral600 : AppColors.neutral400,
+                size: 20,
+              ),
+        );
+      },
     );
   }
 
   Widget _buildDivider() {
-    return Divider(
-      height: 1,
-      thickness: 1,
-      color: Colors.grey.withValues(alpha: 0.1),
-      indent: 16,
-      endIndent: 16,
+    return Builder(
+      builder: (context) {
+        final themeController = Get.find<ThemeController>();
+        final isDark = themeController.currentTheme.value == ThemeMode.dark;
+
+        return Divider(
+          height: 1,
+          thickness: 1,
+          color: isDark ? AppColors.dividerDark : AppColors.divider,
+          indent: 16,
+          endIndent: 16,
+        );
+      },
+    );
+  }
+
+  Widget _buildCustomSwitch({
+    required bool value,
+    required Function(bool) onChanged,
+    required bool isDark,
+  }) {
+    return Builder(
+      builder: (context) => Theme(
+        data: Theme.of(context).copyWith(
+          switchTheme: SwitchThemeData(
+            thumbColor: WidgetStateProperty.resolveWith<Color>(
+              (states) => Colors.white,
+            ),
+            trackColor: WidgetStateProperty.resolveWith<Color>(
+              (states) {
+                if (states.contains(WidgetState.selected)) {
+                  return Theme.of(context).primaryColor;
+                }
+                return isDark ? AppColors.neutral600 : AppColors.neutral300;
+              },
+            ),
+            trackOutlineColor: WidgetStateProperty.resolveWith<Color>(
+              (states) {
+                if (states.contains(WidgetState.selected)) {
+                  return Colors.white;
+                }
+                return isDark ? AppColors.neutral500 : AppColors.neutral400;
+              },
+            ),
+            trackOutlineWidth: WidgetStateProperty.resolveWith<double>(
+              (states) {
+                return 0.7; // Thinner outline
+              },
+            ),
+          ),
+        ),
+        child: Switch(
+          value: value,
+          onChanged: onChanged,
+        ),
+      ),
     );
   }
 
   void _showAboutDialog(BuildContext context) {
     Get.dialog(
-      AlertDialog(
-        title: const Text('About'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Center(
-              child: Container(
-                width: 80,
-                height: 80,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(16),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.1),
-                      blurRadius: 10,
-                      offset: const Offset(0, 4),
+      Builder(
+        builder: (dialogContext) => AlertDialog(
+          title: const Text('About'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Center(
+                child: Container(
+                  width: 80,
+                  height: 80,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(16),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withValues(alpha: 0.1),
+                        blurRadius: 10,
+                        offset: const Offset(0, 4),
+                      ),
+                    ],
+                  ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(16),
+                    child: Image.asset(
+                      'assets/icons/app_icon.png',
+                      fit: BoxFit.cover,
                     ),
-                  ],
-                ),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(16),
-                  child: Image.asset(
-                    'assets/icons/app_icon.png',
-                    fit: BoxFit.cover,
                   ),
                 ),
               ),
-            ),
-            16.kH,
-            const Center(
-              child: Text(
-                'AppName',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+              16.kH,
+              Center(
+                child: Text(
+                  'AppName',
+                  style: Theme.of(dialogContext).textTheme.titleLarge?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               ),
-            ),
-            8.kH,
-            const Center(
-              child: Text(
-                'Version 1.0.0',
-                style: TextStyle(fontSize: 12, color: Colors.grey),
+              8.kH,
+              Center(
+                child: Text(
+                  'Version 1.0.0',
+                  style: Theme.of(dialogContext).textTheme.bodySmall?.copyWith(
+                    color: Colors.grey,
+                  ),
+                ),
               ),
+              16.kH,
+              Text(
+                'GetX Clean Architecture Boilerplate',
+                style: Theme.of(dialogContext).textTheme.titleSmall,
+              ),
+              8.kH,
+              Text(
+                'A Flutter boilerplate project implementing clean architecture principles with GetX for state management, routing, and dependency injection.',
+                style: Theme.of(dialogContext).textTheme.bodySmall,
+              ),
+              12.kH,
+              Text(
+                'Features:',
+                style: Theme.of(dialogContext).textTheme.titleSmall,
+              ),
+              4.kH,
+              Text('• GetX State Management', style: Theme.of(dialogContext).textTheme.bodySmall),
+              Text('• Clean Architecture', style: Theme.of(dialogContext).textTheme.bodySmall),
+              Text('• API Integration with Dio', style: Theme.of(dialogContext).textTheme.bodySmall),
+              Text('• Routing & Navigation', style: Theme.of(dialogContext).textTheme.bodySmall),
+              Text('• Modern UI/UX', style: Theme.of(dialogContext).textTheme.bodySmall),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Get.back(),
+              child: const Text('Close'),
             ),
-            16.kH,
-            const Text(
-              'GetX Clean Architecture Boilerplate',
-              style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
-            ),
-            8.kH,
-            const Text(
-              'A Flutter boilerplate project implementing clean architecture principles with GetX for state management, routing, and dependency injection.',
-              style: TextStyle(fontSize: 12),
-            ),
-            12.kH,
-            const Text('Features:', style: TextStyle(fontWeight: FontWeight.w600)),
-            4.kH,
-            const Text('• GetX State Management', style: TextStyle(fontSize: 12)),
-            const Text('• Clean Architecture', style: TextStyle(fontSize: 12)),
-            const Text('• API Integration with Dio', style: TextStyle(fontSize: 12)),
-            const Text('• Routing & Navigation', style: TextStyle(fontSize: 12)),
-            const Text('• Modern UI/UX', style: TextStyle(fontSize: 12)),
           ],
         ),
-        actions: [
-          TextButton(
-            onPressed: () => Get.back(),
-            child: const Text('Close'),
-          ),
-        ],
       ),
     );
   }

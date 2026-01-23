@@ -15,22 +15,16 @@ class AppTheme {
     ),
     scaffoldBackgroundColor: AppColors.background,
     fontFamily: GoogleFonts.poppins().fontFamily,
-    textTheme: GoogleFonts.poppinsTextTheme().copyWith(
-      headlineSmall: AppTextStyles.headlineSmall,
-      headlineMedium: AppTextStyles.headlineMedium,
-      headlineLarge: AppTextStyles.headlineLarge,
-      bodySmall: AppTextStyles.bodySmall,
-      bodyMedium: AppTextStyles.bodyMedium,
-      bodyLarge: AppTextStyles.bodyLarge,
-      titleSmall: AppTextStyles.titleSmall,
-      titleMedium: AppTextStyles.titleMedium,
-      titleLarge: AppTextStyles.titleLarge,
-      labelSmall: AppTextStyles.labelSmall,
-      labelMedium: AppTextStyles.labelMedium,
-      labelLarge: AppTextStyles.labelLarge,
-      displaySmall: AppTextStyles.displaySmall,
-      displayMedium: AppTextStyles.displayMedium,
-      displayLarge: AppTextStyles.displayLarge,
+    textTheme: _buildTextTheme(Brightness.light),
+    appBarTheme: AppBarTheme(
+      centerTitle: false,
+      scrolledUnderElevation: 0,
+      titleTextStyle: GoogleFonts.poppins(
+        fontSize: 16,
+        fontWeight: FontWeight.w800,
+        letterSpacing: 0.3,
+        color: AppColors.onSurface,
+      ),
     ),
   );
 
@@ -40,19 +34,56 @@ class AppTheme {
     colorScheme: const ColorScheme.dark(
       primary: AppColors.primary,
       secondary: AppColors.primaryContainer,
-      surface: Color(0xff1E1E1E),
-      onSurface: Color(0xffF5F5F5),
+      surface: AppColors.surfaceDark,
+      onSurface: AppColors.onSurfaceDark,
       error: AppColors.error,
     ),
-    scaffoldBackgroundColor: const Color(0xff121212),
+    scaffoldBackgroundColor: AppColors.backgroundDark,
     fontFamily: GoogleFonts.poppins().fontFamily,
-    textTheme: GoogleFonts.poppinsTextTheme(ThemeData.dark().textTheme).copyWith(
-      headlineSmall: AppTextStyles.headlineSmall.copyWith(color: const Color(0xffF5F5F5)),
-      headlineMedium: AppTextStyles.headlineMedium.copyWith(color: const Color(0xffF5F5F5)),
-      headlineLarge: AppTextStyles.headlineLarge.copyWith(color: const Color(0xffF5F5F5)),
-      bodySmall: AppTextStyles.bodySmall.copyWith(color: const Color(0xffF5F5F5)),
-      bodyMedium: AppTextStyles.bodyMedium.copyWith(color: const Color(0xffF5F5F5)),
-      bodyLarge: AppTextStyles.bodyLarge.copyWith(color: const Color(0xffF5F5F5)),
+    textTheme: _buildTextTheme(Brightness.dark),
+    appBarTheme: AppBarTheme(
+      centerTitle: false,
+      scrolledUnderElevation: 0,
+      titleTextStyle: GoogleFonts.poppins(
+        fontSize: 18,
+        fontWeight: FontWeight.w800,
+        letterSpacing: 0.3,
+        color: AppColors.onSurfaceDark,
+      ),
     ),
   );
+
+  // Helper method to build text theme with proper font weights
+  static TextTheme _buildTextTheme(Brightness brightness) {
+    final Color textColor = brightness == Brightness.dark
+        ? AppColors.onSurfaceDark
+        : AppColors.onSurface;
+
+    return GoogleFonts.poppinsTextTheme().copyWith(
+      // Display styles
+      displayLarge: AppTextStyles.displayLarge.copyWith(color: textColor),
+      displayMedium: AppTextStyles.displayMedium.copyWith(color: textColor),
+      displaySmall: AppTextStyles.displaySmall.copyWith(color: textColor),
+
+      // Headline styles
+      headlineLarge: AppTextStyles.headlineLarge.copyWith(color: textColor),
+      headlineMedium: AppTextStyles.headlineMedium.copyWith(color: textColor),
+      headlineSmall: AppTextStyles.headlineSmall.copyWith(color: textColor),
+
+      // Title styles
+      titleLarge: AppTextStyles.titleLarge.copyWith(color: textColor),
+      titleMedium: AppTextStyles.titleMedium.copyWith(color: textColor),
+      titleSmall: AppTextStyles.titleSmall.copyWith(color: textColor),
+
+      // Body styles
+      bodyLarge: AppTextStyles.bodyLarge.copyWith(color: textColor),
+      bodyMedium: AppTextStyles.bodyMedium.copyWith(color: textColor),
+      bodySmall: AppTextStyles.bodySmall.copyWith(color: textColor),
+
+      // Label styles
+      labelLarge: AppTextStyles.labelLarge.copyWith(color: textColor),
+      labelMedium: AppTextStyles.labelMedium.copyWith(color: textColor),
+      labelSmall: AppTextStyles.labelSmall.copyWith(color: textColor),
+    );
+  }
 }

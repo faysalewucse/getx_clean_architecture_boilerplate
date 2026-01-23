@@ -19,9 +19,9 @@ class AppColors {
 
   // Background Colors
   static const Color background = Color(0xFFFAFAFA); // Neutral-50
-  static const Color backgroundDark = Color(0xFF0F172A); // Slate-900
+  static const Color backgroundDark = Color(0xFF121212); // Material Dark Background
   static const Color surface = Color(0xFFFFFFFF);
-  static const Color surfaceDark = Color(0xFF1E293B); // Slate-800
+  static const Color surfaceDark = Color(0xFF1E1E1E); // Material Dark Surface
   static const Color surfaceVariant = Color(0xFFF1F5F9); // Slate-100
   static const Color surfaceVariantDark = Color(0xFF334155); // Slate-700
 
@@ -29,14 +29,14 @@ class AppColors {
   static const Color onBackground = Color(0xFF0F172A); // Slate-900
   static const Color onBackgroundDark = Color(0xFFE2E8F0); // Slate-200
   static const Color onSurface = Color(0xFF1E293B); // Slate-800
-  static const Color onSurfaceDark = Color(0xFFE2E8F0); // Slate-200
+  static const Color onSurfaceDark = Color(0xFFF5F5F5); // Material Dark On-Surface
   static const Color onSurfaceVariant = Color(0xFF64748B); // Slate-500
   static const Color outline = Color(0xFFCBD5E1); // Slate-300
   static const Color outlineDark = Color(0xFF475569); // Slate-600
 
   // Text Hierarchy
   static const Color textPrimary = Color(0xFF0F172A); // Slate-900
-  static const Color textPrimaryDark = Color(0xFFE2E8F0); // Slate-200
+  static const Color textPrimaryDark = Color(0xFFF5F5F5); // Material Dark Primary Text
   static const Color textSecondary = Color(0xFF475569); // Slate-600
   static const Color textSecondaryDark = Color(0xFF94A3B8); // Slate-400
   static const Color textTertiary = Color(0xFF64748B); // Slate-500

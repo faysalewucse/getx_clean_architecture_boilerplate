@@ -14,6 +14,7 @@ class _PrivacySecurityScreenState extends State<PrivacySecurityScreen> {
   bool _twoFactorEnabled = false;
   bool _biometricEnabled = true;
   bool _loginAlerts = true;
+  String _accountVisibility = 'public';
 
   @override
   Widget build(BuildContext context) {
@@ -30,9 +31,7 @@ class _PrivacySecurityScreenState extends State<PrivacySecurityScreen> {
                 16.kH, // Add some top padding
               Text(
                 'Authentication',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(
                   color: Colors.grey[600],
                 ),
               ),
@@ -90,9 +89,7 @@ class _PrivacySecurityScreenState extends State<PrivacySecurityScreen> {
 
               Text(
                 'Privacy',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(
                   color: Colors.grey[600],
                 ),
               ),
@@ -141,9 +138,7 @@ class _PrivacySecurityScreenState extends State<PrivacySecurityScreen> {
 
               Text(
                 'Security Alerts',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(
                   color: Colors.grey[600],
                 ),
               ),
@@ -251,37 +246,35 @@ class _PrivacySecurityScreenState extends State<PrivacySecurityScreen> {
     Widget? trailing,
     Color? iconColor,
   }) {
-    return ListTile(
-      onTap: trailing == null ? onTap : null,
-      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      leading: Container(
-        padding: const EdgeInsets.all(10),
-        decoration: BoxDecoration(
-          color: (iconColor ?? Colors.blue).withValues(alpha: 0.1),
-          borderRadius: BorderRadius.circular(10),
-        ),
-        child: Icon(icon, color: iconColor ?? Colors.blue, size: 24),
-      ),
-      title: Text(
-        title,
-        style: const TextStyle(
-          fontSize: 16,
-          fontWeight: FontWeight.w600,
-        ),
-      ),
-      subtitle: Text(
-        subtitle,
-        style: TextStyle(
-          fontSize: 12,
-          color: Colors.grey[600],
-        ),
-      ),
-      trailing: trailing ??
-          Icon(
-            PhosphorIconsRegular.caretRight,
-            color: Colors.grey[400],
-            size: 20,
+    return Builder(
+      builder: (context) => ListTile(
+        onTap: trailing == null ? onTap : null,
+        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        leading: Container(
+          padding: const EdgeInsets.all(10),
+          decoration: BoxDecoration(
+            color: (iconColor ?? Colors.blue).withValues(alpha: 0.1),
+            borderRadius: BorderRadius.circular(10),
           ),
+          child: Icon(icon, color: iconColor ?? Colors.blue, size: 24),
+        ),
+        title: Text(
+          title,
+          style: Theme.of(context).textTheme.titleMedium,
+        ),
+        subtitle: Text(
+          subtitle,
+          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+            color: Colors.grey[600],
+          ),
+        ),
+        trailing: trailing ??
+            Icon(
+              PhosphorIconsRegular.caretRight,
+              color: Colors.grey[400],
+              size: 20,
+            ),
+      ),
     );
   }
 
@@ -296,38 +289,81 @@ class _PrivacySecurityScreenState extends State<PrivacySecurityScreen> {
   }
 
   void _showVisibilityDialog() {
+    // Note: RadioListTile shows deprecation warnings for groupValue/onChanged
+    // but RadioGroup widget is not yet available in stable Flutter.
+    // This implementation will be updated when RadioGroup becomes available.
+    String selectedVisibility = _accountVisibility;
+
     Get.dialog(
-      AlertDialog(
-        title: const Text('Account Visibility'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            RadioListTile(
-              title: const Text('Public'),
-              value: 'public',
-              groupValue: 'public',
-              onChanged: (value) => Get.back(),
+      StatefulBuilder(
+        builder: (context, setDialogState) => AlertDialog(
+          title: const Text('Account Visibility'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // ignore: deprecated_member_use
+              RadioListTile<String>(
+                title: const Text('Public'),
+                value: 'public',
+                // ignore: deprecated_member_use
+                groupValue: selectedVisibility,
+                // ignore: deprecated_member_use
+                onChanged: (value) {
+                  if (value != null) {
+                    setDialogState(() {
+                      selectedVisibility = value;
+                    });
+                  }
+                },
+              ),
+              // ignore: deprecated_member_use
+              RadioListTile<String>(
+                title: const Text('Private'),
+                value: 'private',
+                // ignore: deprecated_member_use
+                groupValue: selectedVisibility,
+                // ignore: deprecated_member_use
+                onChanged: (value) {
+                  if (value != null) {
+                    setDialogState(() {
+                      selectedVisibility = value;
+                    });
+                  }
+                },
+              ),
+              // ignore: deprecated_member_use
+              RadioListTile<String>(
+                title: const Text('Friends Only'),
+                value: 'friends',
+                // ignore: deprecated_member_use
+                groupValue: selectedVisibility,
+                // ignore: deprecated_member_use
+                onChanged: (value) {
+                  if (value != null) {
+                    setDialogState(() {
+                      selectedVisibility = value;
+                    });
+                  }
+                },
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Get.back(),
+              child: const Text('Cancel'),
             ),
-            RadioListTile(
-              title: const Text('Private'),
-              value: 'private',
-              groupValue: 'public',
-              onChanged: (value) => Get.back(),
-            ),
-            RadioListTile(
-              title: const Text('Friends Only'),
-              value: 'friends',
-              groupValue: 'public',
-              onChanged: (value) => Get.back(),
+            TextButton(
+              onPressed: () {
+                setState(() {
+                  _accountVisibility = selectedVisibility;
+                });
+                Get.back();
+              },
+              child: const Text('Save'),
             ),
           ],
         ),
-        actions: [
-          TextButton(
-            onPressed: () => Get.back(),
-            child: const Text('Cancel'),
-          ),
-        ],
       ),
     );
   }

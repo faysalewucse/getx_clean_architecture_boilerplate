@@ -6,6 +6,7 @@ import 'package:getx_clean_architecture_boilerplate/src/controllers/theme_contro
 import 'package:getx_clean_architecture_boilerplate/src/domain/usecases/check_app_version_usecase.dart';
 import 'package:getx_clean_architecture_boilerplate/src/data/repositories/app_version_repository_impl.dart';
 import 'package:getx_clean_architecture_boilerplate/src/core/utils/dialog_utils.dart';
+import 'package:getx_clean_architecture_boilerplate/src/core/constants/app_strings.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 import 'package:getx_clean_architecture_boilerplate/src/presentation/navigators/home_nav.dart';
@@ -78,7 +79,7 @@ class _MainScreenState extends State<MainScreen> {
   Widget build(BuildContext context) {
     return PopScope(
       canPop: false,
-      onPopInvoked: (didPop) async {
+      onPopInvokedWithResult: (didPop, result) async {
         if (didPop) return;
 
         final currentIndex = _screenController.currentIndex.value;
@@ -202,13 +203,13 @@ class _MainScreenState extends State<MainScreen> {
               selectedItemColor:
                   isDark ? Colors.white : Theme.of(context).primaryColor,
               unselectedItemColor: isDark ? Colors.grey[400] : Colors.grey[600],
-              selectedLabelStyle: const TextStyle(
+              selectedLabelStyle: Theme.of(context).textTheme.labelSmall?.copyWith(
                 fontWeight: FontWeight.w600,
-                fontSize: 12,
+                fontSize: 10,
               ),
-              unselectedLabelStyle: const TextStyle(
+              unselectedLabelStyle: Theme.of(context).textTheme.labelSmall?.copyWith(
                 fontWeight: FontWeight.w500,
-                fontSize: 11,
+                fontSize: 9,
               ),
               items: [
                 _buildNavItem(
@@ -273,10 +274,10 @@ class _MainScreenState extends State<MainScreen> {
 
     return BottomNavigationBarItem(
       icon: Container(
-        padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 16),
+        padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 12),
         decoration: BoxDecoration(
           color: getActiveColor(),
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(10),
         ),
         child: AnimatedSwitcher(
           duration: const Duration(milliseconds: 200),
@@ -286,7 +287,7 @@ class _MainScreenState extends State<MainScreen> {
           child: Icon(
             isSelected ? filledIcon : icon,
             key: ValueKey<bool>(isSelected),
-            size: 24,
+            size: 20,
           ),
         ),
       ),
@@ -295,54 +296,71 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   Widget _buildDrawer(BuildContext context) {
+    final themeController = Get.find<ThemeController>();
+    final isDark = themeController.currentTheme.value == ThemeMode.dark;
+
     return Drawer(
+      backgroundColor: isDark ? const Color(0xFF1E1E1E) : Colors.white,
       child: Column(
         children: [
-          // Drawer Header
-          Container(
-            height: 228,
-            width: double.infinity,
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [
-                  Theme.of(context).primaryColor,
-                  Theme.of(context).primaryColor.withValues(alpha: 0.8),
-                ],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
-            ),
-            child: const SafeArea(
-              child: Padding(
-                padding: EdgeInsets.all(20),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    CircleAvatar(
-                      radius: 30,
-                      backgroundColor: Colors.white,
-                      child: Icon(
-                        PhosphorIconsFill.user,
-                        size: 35,
-                        color: Colors.blue,
-                      ),
-                    ),
-                    SizedBox(height: 12),
-                    Text(
-                      'GetX Boilerplate',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    Text(
-                      'Clean Architecture',
-                      style: TextStyle(color: Colors.white70, fontSize: 14),
-                    ),
-                  ],
+          // Minimalist Header
+          SafeArea(
+            bottom: false,
+            child: Container(
+              width: double.infinity,
+              padding: const EdgeInsets.fromLTRB(24, 32, 24, 24),
+              decoration: BoxDecoration(
+                color: isDark
+                    ? const Color(0xFF252525)
+                    : const Color(0xFFFAFAFA),
+                border: Border(
+                  bottom: BorderSide(
+                    color: isDark
+                        ? const Color(0xFF333333)
+                        : const Color(0xFFE5E5E5),
+                    width: 1,
+                  ),
                 ),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // User Avatar
+                  Container(
+                    width: 56,
+                    height: 56,
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).primaryColor.withValues(alpha: 0.1),
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    child: Icon(
+                      PhosphorIconsRegular.user,
+                      size: 28,
+                      color: Theme.of(context).primaryColor,
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  // App Name
+                  Text(
+                    AppStrings.appName,
+                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 20,
+                      letterSpacing: -0.5,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  // Subtitle
+                  Text(
+                    'Clean Architecture',
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      color: isDark
+                          ? Colors.grey[400]
+                          : Colors.grey[600],
+                      fontSize: 13,
+                    ),
+                  ),
+                ],
               ),
             ),
           ),
@@ -350,27 +368,65 @@ class _MainScreenState extends State<MainScreen> {
           // Drawer Items
           Expanded(
             child: ListView(
-              padding: EdgeInsets.zero,
+              padding: const EdgeInsets.symmetric(vertical: 8),
               children: [
+                const SizedBox(height: 8),
+                // Navigation Section
+                _buildSectionLabel('Navigation', isDark),
                 _buildDrawerItem(
                   icon: PhosphorIconsRegular.houseLine,
                   title: 'Home',
+                  isDark: isDark,
                   onTap: () {
-                    Get.back(); // Close drawer
-                    _handleBottomNavTap(0); // Navigate to home
+                    Get.back();
+                    _handleBottomNavTap(0);
+                  },
+                ),
+                _buildDrawerItem(
+                  icon: PhosphorIconsRegular.squaresFour,
+                  title: 'Categories',
+                  isDark: isDark,
+                  onTap: () {
+                    Get.back();
+                    _handleBottomNavTap(1);
+                  },
+                ),
+                _buildDrawerItem(
+                  icon: PhosphorIconsRegular.package,
+                  title: 'Products',
+                  isDark: isDark,
+                  onTap: () {
+                    Get.back();
+                    _handleBottomNavTap(2);
                   },
                 ),
                 _buildDrawerItem(
                   icon: PhosphorIconsRegular.user,
                   title: 'Profile',
+                  isDark: isDark,
                   onTap: () {
-                    Get.back(); // Close drawer
-                    _handleBottomNavTap(3); // Navigate to profile
+                    Get.back();
+                    _handleBottomNavTap(3);
                   },
                 ),
+
+                const SizedBox(height: 8),
+                Divider(
+                  color: isDark
+                      ? const Color(0xFF333333)
+                      : const Color(0xFFE5E5E5),
+                  thickness: 1,
+                  indent: 16,
+                  endIndent: 16,
+                ),
+                const SizedBox(height: 8),
+
+                // General Section
+                _buildSectionLabel('General', isDark),
                 _buildDrawerItem(
                   icon: PhosphorIconsRegular.gear,
                   title: 'Settings',
+                  isDark: isDark,
                   onTap: () {
                     Get.back();
                     _showComingSoon('Settings');
@@ -379,31 +435,62 @@ class _MainScreenState extends State<MainScreen> {
                 _buildDrawerItem(
                   icon: PhosphorIconsRegular.info,
                   title: 'About',
+                  isDark: isDark,
                   onTap: () {
                     Get.back();
                     _showAboutDialog();
                   },
                 ),
-                const Divider(),
+
+                const SizedBox(height: 8),
+                Divider(
+                  color: isDark
+                      ? const Color(0xFF333333)
+                      : const Color(0xFFE5E5E5),
+                  thickness: 1,
+                  indent: 16,
+                  endIndent: 16,
+                ),
+                const SizedBox(height: 8),
+
+                // Support Section
+                _buildSectionLabel('Support', isDark),
                 _buildDrawerItem(
-                  icon: PhosphorIconsRegular.question,
+                  icon: PhosphorIconsRegular.lifebuoy,
                   title: 'Help & Support',
+                  isDark: isDark,
                   onTap: () {
                     Get.back();
                     _showComingSoon('Help & Support');
                   },
                 ),
                 _buildDrawerItem(
-                  icon: PhosphorIconsRegular.chatCenteredDots,
+                  icon: PhosphorIconsRegular.chatCircleDots,
                   title: 'Feedback',
+                  isDark: isDark,
                   onTap: () {
                     Get.back();
                     _showComingSoon('Feedback');
                   },
                 ),
+
+                const SizedBox(height: 8),
+                Divider(
+                  color: isDark
+                      ? const Color(0xFF333333)
+                      : const Color(0xFFE5E5E5),
+                  thickness: 1,
+                  indent: 16,
+                  endIndent: 16,
+                ),
+                const SizedBox(height: 8),
+
+                // Logout
                 _buildDrawerItem(
                   icon: PhosphorIconsRegular.signOut,
                   title: 'Logout',
+                  isDark: isDark,
+                  textColor: Colors.red,
                   onTap: () {
                     Get.back();
                     _showLogoutDialog();
@@ -413,13 +500,31 @@ class _MainScreenState extends State<MainScreen> {
             ),
           ),
 
-          // App Version
+          // App Version - Minimalist
           Container(
-            padding: const EdgeInsets.all(16),
-            child: Text(
-              'GetX Clean Architecture Boilerplate\nVersion 1.0.0',
-              textAlign: TextAlign.center,
-              style: TextStyle(color: Colors.grey[600], fontSize: 12),
+            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+            decoration: BoxDecoration(
+              border: Border(
+                top: BorderSide(
+                  color: isDark
+                      ? const Color(0xFF333333)
+                      : const Color(0xFFE5E5E5),
+                  width: 1,
+                ),
+              ),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  'Version 1.0.0',
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                    color: isDark ? Colors.grey[500] : Colors.grey[500],
+                    fontSize: 11,
+                    letterSpacing: 0.5,
+                  ),
+                ),
+              ],
             ),
           ),
         ],
@@ -427,16 +532,83 @@ class _MainScreenState extends State<MainScreen> {
     );
   }
 
+  Widget _buildSectionLabel(String label, bool isDark) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(24, 8, 24, 8),
+      child: Text(
+        label.toUpperCase(),
+        style: TextStyle(
+          fontSize: 11,
+          fontWeight: FontWeight.w600,
+          letterSpacing: 1.2,
+          color: isDark ? Colors.grey[500] : Colors.grey[500],
+        ),
+      ),
+    );
+  }
+
   Widget _buildDrawerItem({
     required IconData icon,
     required String title,
+    required bool isDark,
     required VoidCallback onTap,
+    Color? textColor,
   }) {
-    return ListTile(
-      leading: Icon(icon, color: Colors.grey[700]),
-      title: Text(title),
-      onTap: onTap,
-      contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 2),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(12),
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Row(
+              children: [
+                Container(
+                  width: 36,
+                  height: 36,
+                  decoration: BoxDecoration(
+                    color: textColor != null
+                        ? textColor.withValues(alpha: 0.1)
+                        : (isDark
+                            ? Colors.white.withValues(alpha: 0.05)
+                            : Colors.grey.withValues(alpha: 0.08)),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Icon(
+                    icon,
+                    size: 20,
+                    color: textColor ??
+                        (isDark ? Colors.grey[300] : Colors.grey[700]),
+                  ),
+                ),
+                const SizedBox(width: 16),
+                Expanded(
+                  child: Text(
+                    title,
+                    style: TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w500,
+                      color: textColor ??
+                          (isDark ? Colors.grey[200] : Colors.grey[800]),
+                      letterSpacing: -0.2,
+                    ),
+                  ),
+                ),
+                Icon(
+                  PhosphorIconsRegular.caretRight,
+                  size: 16,
+                  color: isDark ? Colors.grey[600] : Colors.grey[400],
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
     );
   }
 
@@ -456,37 +628,47 @@ class _MainScreenState extends State<MainScreen> {
 
   void _showAboutDialog() {
     Get.dialog(
-      AlertDialog(
-        title: const Text('About'),
-        content: const Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'GetX Clean Architecture Boilerplate',
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-            ),
-            SizedBox(height: 8),
-            Text(
-              'A Flutter boilerplate project implementing clean architecture principles with GetX for state management, routing, and dependency injection.',
-            ),
-            SizedBox(height: 12),
-            Text('Features:', style: TextStyle(fontWeight: FontWeight.w600)),
-            Text('• GetX State Management'),
-            Text('• Clean Architecture'),
-            Text('• API Integration with Dio'),
-            Text('• Routing & Navigation'),
-            Text('• Theming System'),
-            SizedBox(height: 12),
-            Text(
-              'Version: 1.0.0',
-              style: TextStyle(fontSize: 12, color: Colors.grey),
-            ),
+      Builder(
+        builder: (dialogContext) => AlertDialog(
+          title: const Text('About'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                AppStrings.appName,
+                style: Theme.of(dialogContext).textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                'A Flutter boilerplate project implementing clean architecture principles with GetX for state management, routing, and dependency injection.',
+                style: Theme.of(dialogContext).textTheme.bodyMedium,
+              ),
+              const SizedBox(height: 12),
+              Text(
+                'Features:',
+                style: Theme.of(dialogContext).textTheme.titleSmall,
+              ),
+              Text('• GetX State Management', style: Theme.of(dialogContext).textTheme.bodyMedium),
+              Text('• Clean Architecture', style: Theme.of(dialogContext).textTheme.bodyMedium),
+              Text('• API Integration with Dio', style: Theme.of(dialogContext).textTheme.bodyMedium),
+              Text('• Routing & Navigation', style: Theme.of(dialogContext).textTheme.bodyMedium),
+              Text('• Theming System', style: Theme.of(dialogContext).textTheme.bodyMedium),
+              const SizedBox(height: 12),
+              Text(
+                'Version: 1.0.0',
+                style: Theme.of(dialogContext).textTheme.bodySmall?.copyWith(
+                  color: Colors.grey,
+                ),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(onPressed: () => Get.back(), child: const Text('Close')),
           ],
         ),
-        actions: [
-          TextButton(onPressed: () => Get.back(), child: const Text('Close')),
-        ],
       ),
     );
   }
@@ -550,9 +732,9 @@ class _MainScreenState extends State<MainScreen> {
             const Text('Exit App'),
           ],
         ),
-        content: const Text(
+        content: Text(
           'Are you sure you want to exit the application?',
-          style: TextStyle(fontSize: 15),
+          style: Theme.of(Get.context!).textTheme.bodyMedium,
         ),
         actions: [
           TextButton(
@@ -562,8 +744,7 @@ class _MainScreenState extends State<MainScreen> {
             ),
             child: Text(
               'Cancel',
-              style: TextStyle(
-                fontSize: 15,
+              style: Theme.of(Get.context!).textTheme.labelLarge?.copyWith(
                 fontWeight: FontWeight.w600,
                 color: isDark ? Colors.grey[300] : Colors.grey[700],
               ),
@@ -582,10 +763,9 @@ class _MainScreenState extends State<MainScreen> {
                 borderRadius: BorderRadius.circular(8),
               ),
             ),
-            child: const Text(
+            child: Text(
               'Exit',
-              style: TextStyle(
-                fontSize: 15,
+              style: Theme.of(Get.context!).textTheme.labelLarge?.copyWith(
                 fontWeight: FontWeight.w600,
               ),
             ),

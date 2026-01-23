@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:getx_clean_architecture_boilerplate/src/controllers/network_controller.dart';
-import 'package:getx_clean_architecture_boilerplate/src/controllers/theme_controller.dart';
-import 'package:getx_clean_architecture_boilerplate/src/core/services/storage_service.dart';
-import 'package:getx_clean_architecture_boilerplate/src/presentation/bindings/initial_bindings.dart';
-import 'package:getx_clean_architecture_boilerplate/src/presentation/routes/app_pages.dart';
-import 'package:getx_clean_architecture_boilerplate/src/presentation/routes/app_routes.dart';
-import 'package:getx_clean_architecture_boilerplate/src/presentation/themes/app_theme.dart';
-import 'package:getx_clean_architecture_boilerplate/src/presentation/translations/translation_service.dart';
 import 'package:toastification/toastification.dart';
+import 'package:getx_clean_architecture_boilerplate/src/core/constants/app_strings.dart';
+import 'package:getx_clean_architecture_boilerplate/src/controllers/theme_controller.dart';
+import 'package:getx_clean_architecture_boilerplate/src/presentation/routes/app_pages.dart';
+import 'package:getx_clean_architecture_boilerplate/src/presentation/themes/app_theme.dart';
+import 'package:getx_clean_architecture_boilerplate/src/core/services/storage_service.dart';
+import 'package:getx_clean_architecture_boilerplate/src/controllers/network_controller.dart';
+import 'package:getx_clean_architecture_boilerplate/src/presentation/routes/app_routes.dart';
+import 'package:getx_clean_architecture_boilerplate/src/presentation/bindings/initial_bindings.dart';
+import 'package:getx_clean_architecture_boilerplate/src/presentation/translations/translation_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -35,7 +36,7 @@ class MyApp extends StatelessWidget {
       child: Obx(
         () => GetMaterialApp(
           debugShowCheckedModeBanner: false,
-          title: 'Getx Boilerplate',
+          title: AppStrings.appName,
           initialBinding: InitialScreenBindings(),
           locale: const Locale('en', 'US'),
           fallbackLocale: const Locale('en', 'US'),
