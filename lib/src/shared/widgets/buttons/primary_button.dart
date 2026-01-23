@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:getx_clean_architecture_boilerplate/src/core/constants/app_colors.dart';
+import 'package:getx_clean_architecture_boilerplate/src/presentation/themes/app_textstyles.dart';
 import 'package:getx_clean_architecture_boilerplate/src/shared/widgets/loaders/primary_loader.dart';
 
 class PrimaryButton extends StatelessWidget {
@@ -52,10 +54,7 @@ class PrimaryButton extends StatelessWidget {
             ? PrimaryLoader()
             : Text(
                 label,
-                style: TextStyle(
-                  color: foregroundColor ?? Colors.white,
-                  fontSize: 14,
-                ),
+                style: Theme.of(context).textTheme.labelLarge?.copyWith(color: AppColors.background),
               ),
       ),
     );

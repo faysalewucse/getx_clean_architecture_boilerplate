@@ -14,8 +14,8 @@ class AppTheme {
       error: AppColors.error,
     ),
     scaffoldBackgroundColor: AppColors.background,
-    fontFamily: GoogleFonts.montserrat().fontFamily,
-    textTheme: GoogleFonts.montserratTextTheme().copyWith(
+    fontFamily: GoogleFonts.poppins().fontFamily,
+    textTheme: GoogleFonts.poppinsTextTheme().copyWith(
       headlineSmall: AppTextStyles.headlineSmall,
       headlineMedium: AppTextStyles.headlineMedium,
       headlineLarge: AppTextStyles.headlineLarge,
@@ -45,8 +45,8 @@ class AppTheme {
       error: AppColors.error,
     ),
     scaffoldBackgroundColor: const Color(0xff121212),
-    fontFamily: GoogleFonts.montserrat().fontFamily,
-    textTheme: GoogleFonts.montserratTextTheme(ThemeData.dark().textTheme).copyWith(
+    fontFamily: GoogleFonts.poppins().fontFamily,
+    textTheme: GoogleFonts.poppinsTextTheme(ThemeData.dark().textTheme).copyWith(
       headlineSmall: AppTextStyles.headlineSmall.copyWith(color: const Color(0xffF5F5F5)),
       headlineMedium: AppTextStyles.headlineMedium.copyWith(color: const Color(0xffF5F5F5)),
       headlineLarge: AppTextStyles.headlineLarge.copyWith(color: const Color(0xffF5F5F5)),

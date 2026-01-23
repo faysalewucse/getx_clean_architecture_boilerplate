@@ -1,21 +1,48 @@
 import 'package:get/get.dart';
-import 'package:flutter/material.dart';
-import 'package:getx_clean_architecture_boilerplate/src/presentation/views/category/category_screen.dart';
-import 'package:getx_clean_architecture_boilerplate/src/presentation/views/home/home_screen.dart';
-import 'package:getx_clean_architecture_boilerplate/src/presentation/views/products/products_screen.dart';
-import 'package:getx_clean_architecture_boilerplate/src/presentation/views/profile/profile_screen.dart';
 
-class ScreenController extends GetxController{
-  final RxInt currentIndex = 0.obs;
+class ScreenController extends GetxController {
+  static ScreenController get to => Get.find();
 
-  final List<Widget> pages = [
-    HomeScreen(),
-    CategoryScreen(),
-    ProductsScreen(),
-    ProfileScreen(),
-  ];
+  var currentIndex = 0.obs;
+  var currentTitle = 'GetX Boilerplate'.obs;
+  var showBackButton = false.obs;
 
-  void changePageIndex(int index){
+  // Route titles mapping for AppBar
+  final Map<int, String> tabTitles = {
+    0: 'GetX Boilerplate',
+    1: 'Categories',
+    2: 'Products',
+    3: 'Profile',
+  };
+
+  final Map<String, String> nestedRouteTitles = {
+    '/profile/edit-profile': 'Edit Profile',
+    '/profile/privacy-security': 'Privacy & Security',
+  };
+
+  void changePage(int index) {
     currentIndex.value = index;
+    currentTitle.value = tabTitles[index] ?? 'GetX Boilerplate';
+    showBackButton.value = false;
+  }
+
+  void updateTitle(String route) {
+    if (nestedRouteTitles.containsKey(route)) {
+      currentTitle.value = nestedRouteTitles[route]!;
+      showBackButton.value = true;
+    } else {
+      currentTitle.value = tabTitles[currentIndex.value] ?? 'GetX Boilerplate';
+      showBackButton.value = false;
+    }
+  }
+
+  void handleBackButton() {
+    final navigatorKey = Get.nestedKey(currentIndex.value);
+    if (navigatorKey?.currentState?.canPop() ?? false) {
+      navigatorKey?.currentState?.pop();
+      // Reset to main title after popping
+      currentTitle.value = tabTitles[currentIndex.value] ?? 'GetX Boilerplate';
+      showBackButton.value = false;
+    }
   }
 }

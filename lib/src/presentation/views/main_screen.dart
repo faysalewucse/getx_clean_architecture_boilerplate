@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:getx_clean_architecture_boilerplate/src/controllers/screen_controller.dart';
 import 'package:getx_clean_architecture_boilerplate/src/controllers/theme_controller.dart';
-import 'package:getx_clean_architecture_boilerplate/src/presentation/routes/app_routes.dart';
 import 'package:getx_clean_architecture_boilerplate/src/domain/usecases/check_app_version_usecase.dart';
 import 'package:getx_clean_architecture_boilerplate/src/data/repositories/app_version_repository_impl.dart';
 import 'package:getx_clean_architecture_boilerplate/src/core/utils/dialog_utils.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
+import 'package:getx_clean_architecture_boilerplate/src/presentation/navigators/home_nav.dart';
+import 'package:getx_clean_architecture_boilerplate/src/presentation/navigators/category_nav.dart';
+import 'package:getx_clean_architecture_boilerplate/src/presentation/navigators/products_nav.dart';
+import 'package:getx_clean_architecture_boilerplate/src/presentation/navigators/profile_nav.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -31,6 +35,22 @@ class _MainScreenState extends State<MainScreen> {
     );
   }
 
+  void _handleBottomNavTap(int index) {
+    _screenController.changePage(index);
+  }
+
+  Widget _buildBody() {
+    return Obx(() => IndexedStack(
+          index: _screenController.currentIndex.value,
+          children: const [
+            HomeNav(),
+            CategoryNav(),
+            ProductsNav(),
+            ProfileNav(),
+          ],
+        ));
+  }
+
   Future<void> _checkAppVersion(BuildContext context) async {
     if (_hasCheckedVersion) return;
     _hasCheckedVersion = true;
@@ -39,9 +59,7 @@ class _MainScreenState extends State<MainScreen> {
     final appVersion = await useCase.call();
 
     final packageInfo = await PackageInfo.fromPlatform();
-    final buildVersion =
-        int.tryParse(packageInfo.buildNumber) ??
-        1; // Fallback to 1 if parsing fails
+    final buildVersion = int.tryParse(packageInfo.buildNumber) ?? 1;
 
     if (buildVersion < appVersion.minimumAppVersion) {
       DialogUtils.showUpdateDialog(
@@ -58,46 +76,86 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      resizeToAvoidBottomInset: true,
-      appBar: AppBar(
-        title: const Text('GetX Boilerplate'),
-        titleSpacing: 0,
-        leading: Obx(() {
-          final themeController = Get.find<ThemeController>();
-          final isDark = themeController.currentTheme.value == ThemeMode.dark;
+    return PopScope(
+      canPop: false,
+      onPopInvoked: (didPop) async {
+        if (didPop) return;
 
-          return Builder(
-            builder: (context) => IconButton(
-              icon: Icon(
-                PhosphorIconsRegular.sidebar,
-                color: isDark ? Colors.white : Colors.black,
-              ),
-              onPressed: () => Scaffold.of(context).openDrawer(),
-            ),
-          );
-        }),
-        actions: [
-          Obx(() {
+        final currentIndex = _screenController.currentIndex.value;
+
+        // Try to pop from the current nested navigator first
+        final navigatorKey = Get.nestedKey(currentIndex);
+        final canPop = navigatorKey?.currentState?.canPop() ?? false;
+
+        if (canPop) {
+          // Pop from nested navigator
+          navigatorKey?.currentState?.pop();
+          return;
+        }
+
+        // If we're already on home tab and can't pop, show exit confirmation
+        if (currentIndex == 0) {
+          _showExitConfirmationDialog();
+          return;
+        }
+
+        // Otherwise navigate to home tab
+        _handleBottomNavTap(0);
+      },
+      child: Scaffold(
+        resizeToAvoidBottomInset: true,
+        appBar: AppBar(
+          title: Obx(() => Text(_screenController.currentTitle.value)),
+          titleSpacing: 0,
+          leading: Obx(() {
             final themeController = Get.find<ThemeController>();
             final isDark = themeController.currentTheme.value == ThemeMode.dark;
+            final showBack = _screenController.showBackButton.value;
 
-            return Padding(
-              padding: const EdgeInsets.only(right: 4.0),
-              child: IconButton(
-                onPressed: () => themeController.switchTheme(),
+            if (showBack) {
+              // Show back button for nested routes
+              return IconButton(
                 icon: Icon(
-                  isDark ? PhosphorIconsRegular.sun : PhosphorIconsRegular.moon,
+                  PhosphorIconsRegular.arrowLeft,
                   color: isDark ? Colors.white : Colors.black,
                 ),
+                onPressed: () => _screenController.handleBackButton(),
+              );
+            }
+
+            // Show drawer icon for main routes
+            return Builder(
+              builder: (context) => IconButton(
+                icon: Icon(
+                  PhosphorIconsRegular.sidebar,
+                  color: isDark ? Colors.white : Colors.black,
+                ),
+                onPressed: () => Scaffold.of(context).openDrawer(),
               ),
             );
           }),
-        ],
+          actions: [
+            Obx(() {
+              final themeController = Get.find<ThemeController>();
+              final isDark = themeController.currentTheme.value == ThemeMode.dark;
+
+              return Padding(
+                padding: const EdgeInsets.only(right: 4.0),
+                child: IconButton(
+                  onPressed: () => themeController.switchTheme(),
+                  icon: Icon(
+                    isDark ? PhosphorIconsRegular.sun : PhosphorIconsRegular.moon,
+                    color: isDark ? Colors.white : Colors.black,
+                  ),
+                ),
+              );
+            }),
+          ],
+        ),
+        drawer: _buildDrawer(context),
+        body: _buildBody(),
+        bottomNavigationBar: _buildBottomNavigationBar(),
       ),
-      drawer: _buildDrawer(context),
-      body: Obx(() => _screenController.pages[_screenController.currentIndex.value]),
-      bottomNavigationBar: _buildBottomNavigationBar(),
     );
   }
 
@@ -112,9 +170,8 @@ class _MainScreenState extends State<MainScreen> {
           color: isDark ? const Color(0xFF1E1E1E) : Colors.white,
           boxShadow: [
             BoxShadow(
-              color: isDark
-                  ? Colors.black26
-                  : Colors.grey.withValues(alpha: 0.3),
+              color:
+                  isDark ? Colors.black26 : Colors.grey.withValues(alpha: 0.3),
               offset: const Offset(0, -2),
               blurRadius: 12,
               spreadRadius: 0,
@@ -138,16 +195,13 @@ class _MainScreenState extends State<MainScreen> {
             ),
             child: BottomNavigationBar(
               currentIndex: currentIndex,
-              onTap: (index) => _screenController.changePageIndex(index),
+              onTap: (index) => _handleBottomNavTap(index),
               type: BottomNavigationBarType.fixed,
               backgroundColor: Colors.transparent,
               elevation: 0,
-              selectedItemColor: isDark
-                  ? Colors.white
-                  : Theme.of(context).primaryColor,
-              unselectedItemColor: isDark
-                  ? Colors.grey[400]
-                  : Colors.grey[600],
+              selectedItemColor:
+                  isDark ? Colors.white : Theme.of(context).primaryColor,
+              unselectedItemColor: isDark ? Colors.grey[400] : Colors.grey[600],
               selectedLabelStyle: const TextStyle(
                 fontWeight: FontWeight.w600,
                 fontSize: 12,
@@ -156,40 +210,40 @@ class _MainScreenState extends State<MainScreen> {
                 fontWeight: FontWeight.w500,
                 fontSize: 11,
               ),
-            items: [
-              _buildNavItem(
-                PhosphorIconsRegular.houseLine,
-                PhosphorIconsFill.houseLine,
-                'Home',
-                0,
-                currentIndex,
-                isDark,
-              ),
-              _buildNavItem(
-                PhosphorIconsRegular.squaresFour,
-                PhosphorIconsFill.squaresFour,
-                'Categories',
-                1,
-                currentIndex,
-                isDark,
-              ),
-              _buildNavItem(
-                PhosphorIconsRegular.package,
-                PhosphorIconsFill.package,
-                'Products',
-                2,
-                currentIndex,
-                isDark,
-              ),
-              _buildNavItem(
-                PhosphorIconsRegular.user,
-                PhosphorIconsFill.user,
-                'Profile',
-                3,
-                currentIndex,
-                isDark,
-              ),
-            ],
+              items: [
+                _buildNavItem(
+                  PhosphorIconsRegular.houseLine,
+                  PhosphorIconsFill.houseLine,
+                  'Home',
+                  0,
+                  currentIndex,
+                  isDark,
+                ),
+                _buildNavItem(
+                  PhosphorIconsRegular.squaresFour,
+                  PhosphorIconsFill.squaresFour,
+                  'Categories',
+                  1,
+                  currentIndex,
+                  isDark,
+                ),
+                _buildNavItem(
+                  PhosphorIconsRegular.package,
+                  PhosphorIconsFill.package,
+                  'Products',
+                  2,
+                  currentIndex,
+                  isDark,
+                ),
+                _buildNavItem(
+                  PhosphorIconsRegular.user,
+                  PhosphorIconsFill.user,
+                  'Profile',
+                  3,
+                  currentIndex,
+                  isDark,
+                ),
+              ],
             ),
           ),
         ),
@@ -268,7 +322,11 @@ class _MainScreenState extends State<MainScreen> {
                     CircleAvatar(
                       radius: 30,
                       backgroundColor: Colors.white,
-                      child: Icon(PhosphorIconsFill.user, size: 35, color: Colors.blue),
+                      child: Icon(
+                        PhosphorIconsFill.user,
+                        size: 35,
+                        color: Colors.blue,
+                      ),
                     ),
                     SizedBox(height: 12),
                     Text(
@@ -298,14 +356,16 @@ class _MainScreenState extends State<MainScreen> {
                   icon: PhosphorIconsRegular.houseLine,
                   title: 'Home',
                   onTap: () {
-                    Get.back();
+                    Get.back(); // Close drawer
+                    _handleBottomNavTap(0); // Navigate to home
                   },
                 ),
                 _buildDrawerItem(
                   icon: PhosphorIconsRegular.user,
                   title: 'Profile',
                   onTap: () {
-                    Get.toNamed(Routes.login);
+                    Get.back(); // Close drawer
+                    _handleBottomNavTap(3); // Navigate to profile
                   },
                 ),
                 _buildDrawerItem(
@@ -449,7 +509,10 @@ class _MainScreenState extends State<MainScreen> {
                 snackPosition: SnackPosition.BOTTOM,
                 backgroundColor: Colors.green.withValues(alpha: 0.1),
                 colorText: Colors.green,
-                icon: const Icon(PhosphorIconsRegular.checkCircle, color: Colors.green),
+                icon: const Icon(
+                  PhosphorIconsRegular.checkCircle,
+                  color: Colors.green,
+                ),
               );
             },
             style: TextButton.styleFrom(foregroundColor: Colors.red),
@@ -459,4 +522,78 @@ class _MainScreenState extends State<MainScreen> {
       ),
     );
   }
+
+  void _showExitConfirmationDialog() {
+    final themeController = Get.find<ThemeController>();
+    final isDark = themeController.currentTheme.value == ThemeMode.dark;
+
+    Get.dialog(
+      AlertDialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+        ),
+        title: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: Colors.orange.withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Icon(
+                PhosphorIconsRegular.warning,
+                color: Colors.orange,
+                size: 24,
+              ),
+            ),
+            const SizedBox(width: 12),
+            const Text('Exit App'),
+          ],
+        ),
+        content: const Text(
+          'Are you sure you want to exit the application?',
+          style: TextStyle(fontSize: 15),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Get.back(),
+            style: TextButton.styleFrom(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+            ),
+            child: Text(
+              'Cancel',
+              style: TextStyle(
+                fontSize: 15,
+                fontWeight: FontWeight.w600,
+                color: isDark ? Colors.grey[300] : Colors.grey[700],
+              ),
+            ),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              // Exit the app using SystemNavigator
+              SystemNavigator.pop();
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.orange,
+              foregroundColor: Colors.white,
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
+            ),
+            child: const Text(
+              'Exit',
+              style: TextStyle(
+                fontSize: 15,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
+        ],
+      ),
+      barrierDismissible: true,
+    );
+  }
 }
+

@@ -1,8 +1,15 @@
 class Routes {
   static const String initialRoute = '/';
   static const String home = '/home';
-  static const String login = '/sign-in';
+  static const String categories = '/categories';
+  static const String products = '/products';
   static const String profile = '/profile';
+
+  // Profile nested routes
+  static const String editProfile = '/profile/edit-profile';
+  static const String privacySecurity = '/profile/privacy-security';
+
+  static const String login = '/sign-in';
   static const String register = '/register';
 
   static const String emailVerification = '/email-verification';

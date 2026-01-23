@@ -11,6 +11,7 @@ import 'package:getx_clean_architecture_boilerplate/src/domain/repositories/auth
 import 'package:getx_clean_architecture_boilerplate/src/domain/usecases/login_usecase.dart';
 import 'package:getx_clean_architecture_boilerplate/src/domain/usecases/is_user_logged_in_usecase.dart';
 import 'package:getx_clean_architecture_boilerplate/src/presentation/views/auth/auth_controller.dart';
+import 'package:getx_clean_architecture_boilerplate/src/presentation/bindings/products_bindings.dart';
 import 'package:logger/logger.dart';
 
 class InitialScreenBindings implements Bindings {
@@ -40,5 +41,8 @@ class InitialScreenBindings implements Bindings {
     Get.put<GlobalController>(GlobalController());
     Get.put<ScreenController>(ScreenController());
     Get.put<AuthController>(AuthController());
+
+    // Initialize Products bindings for nested navigation
+    ProductsBindings().dependencies();
   }
 }

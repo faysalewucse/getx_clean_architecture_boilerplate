@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:getx_clean_architecture_boilerplate/src/data/models/login_request_model.dart';
 import 'package:getx_clean_architecture_boilerplate/src/domain/entities/user_entity.dart';
@@ -55,6 +56,10 @@ class AuthController extends GetxController {
       _isLoading.value = false;
       _user.value = user;
       isUserLoggedIn.value = true;
+
+      // Save credentials to device's credential manager
+      TextInput.finishAutofillContext(shouldSave: true);
+
       Get.offAllNamed(Routes.home);
       ToastUtils.showSuccessToast(message: 'Welcome back, ${user.name}!');
     } catch (e) {
@@ -66,6 +71,7 @@ class AuthController extends GetxController {
 
   void logout() {
     _user.value = null;
+    isUserLoggedIn.value = false;
     Get.offAllNamed(Routes.login);
   }
 

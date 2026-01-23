@@ -1,41 +1,94 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:getx_clean_architecture_boilerplate/src/core/constants/app_paddings.dart';
-import 'package:getx_clean_architecture_boilerplate/src/presentation/views/auth/auth_controller.dart';
 import 'package:getx_clean_architecture_boilerplate/src/shared/widgets/buttons/primary_button.dart';
 import 'package:getx_clean_architecture_boilerplate/src/core/utils/input_field_validators.dart';
 import 'package:getx_clean_architecture_boilerplate/src/shared/widgets/inputs/input_field.dart';
 import 'package:getx_clean_architecture_boilerplate/src/core/utils/size_utils.dart';
 import 'package:getx_clean_architecture_boilerplate/src/shared/widgets/loaders/primary_loader.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
-import 'package:getx_clean_architecture_boilerplate/src/presentation/routes/app_routes.dart';
 
-class LoginScreen extends GetView<AuthController> {
-  const LoginScreen({super.key});
+class RegisterScreen extends StatefulWidget {
+  const RegisterScreen({super.key});
+
+  @override
+  State<RegisterScreen> createState() => _RegisterScreenState();
+}
+
+class _RegisterScreenState extends State<RegisterScreen> {
+  final _formKey = GlobalKey<FormState>();
+  final _nameController = TextEditingController();
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+  final _confirmPasswordController = TextEditingController();
+  final bool _isLoading = false;
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _emailController.dispose();
+    _passwordController.dispose();
+    _confirmPasswordController.dispose();
+    super.dispose();
+  }
+
+  String? _validateConfirmPassword(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Please confirm your password';
+    }
+    if (value != _passwordController.text) {
+      return 'Passwords do not match';
+    }
+    return null;
+  }
+
+  void _register() {
+    if (_formKey.currentState!.validate()) {
+      // TODO: Implement registration logic
+      Get.snackbar(
+        'Success',
+        'Registration functionality coming soon!',
+        snackPosition: SnackPosition.BOTTOM,
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        leading: IconButton(
+          icon: Icon(
+            PhosphorIconsRegular.arrowLeft,
+            color: Theme.of(context).brightness == Brightness.dark
+                ? Colors.white
+                : Colors.black,
+          ),
+          onPressed: () => Get.back(),
+        ),
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+      ),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
             padding: AppPadding.screenPaddingAll,
             child: AutofillGroup(
               child: Form(
-                key: controller.formKey,
+                key: _formKey,
                 child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  60.kH,
+                  20.kH,
 
                   // App Icon
                   Center(
                     child: Container(
-                      width: 100,
-                      height: 100,
+                      width: 80,
+                      height: 80,
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20),
+                        borderRadius: BorderRadius.circular(16),
                         boxShadow: [
                           BoxShadow(
                             color: Colors.black.withValues(alpha: 0.1),
@@ -45,7 +98,7 @@ class LoginScreen extends GetView<AuthController> {
                         ],
                       ),
                       child: ClipRRect(
-                        borderRadius: BorderRadius.circular(20),
+                        borderRadius: BorderRadius.circular(16),
                         child: Image.asset(
                           'assets/icons/app_icon.png',
                           fit: BoxFit.cover,
@@ -53,34 +106,54 @@ class LoginScreen extends GetView<AuthController> {
                       ),
                     ),
                   ),
-                  24.kH,
+                  20.kH,
 
                   // App Name
                   const Text(
                     'AppName',
                     style: TextStyle(
-                      fontSize: 28,
+                      fontSize: 24,
                       fontWeight: FontWeight.bold,
                     ),
                     textAlign: TextAlign.center,
                   ),
                   8.kH,
 
-                  // Welcome Text
+                  // Create Account Text
                   Text(
-                    'Welcome Back',
+                    'Create an Account',
                     style: TextStyle(
                       fontSize: 16,
                       color: Colors.grey[600],
                     ),
                     textAlign: TextAlign.center,
                   ),
-                  40.kH,
+                  32.kH,
+
+                  // Name Field
+                  InputField(
+                    hintText: 'Full Name',
+                    controller: _nameController,
+                    keyboardType: TextInputType.name,
+                    textInputAction: TextInputAction.next,
+                    autofillHints: const [AutofillHints.name],
+                    prefixIcon: Icon(
+                      PhosphorIconsRegular.user,
+                      color: Colors.grey[600],
+                    ),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter your name';
+                      }
+                      return null;
+                    },
+                  ),
+                  16.kH,
 
                   // Email Field
                   InputField(
                     hintText: 'Email',
-                    controller: controller.emailController,
+                    controller: _emailController,
                     keyboardType: TextInputType.emailAddress,
                     textInputAction: TextInputAction.next,
                     autofillHints: const [AutofillHints.email],
@@ -95,62 +168,51 @@ class LoginScreen extends GetView<AuthController> {
                   // Password Field
                   InputField(
                     hintText: 'Password',
-                    controller: controller.passwordController,
+                    controller: _passwordController,
                     obscureText: true,
                     isPassword: true,
-                    textInputAction: TextInputAction.done,
-                    autofillHints: const [AutofillHints.password],
+                    textInputAction: TextInputAction.next,
+                    autofillHints: const [AutofillHints.newPassword],
                     prefixIcon: Icon(
                       PhosphorIconsRegular.lock,
                       color: Colors.grey[600],
                     ),
                     validator: InputFieldValidators.password,
-                    onFieldSubmitted: (_) => controller.login(),
                   ),
-                  12.kH,
+                  16.kH,
 
-                  // Remember Me & Forgot Password Row
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Obx(
-                        () => Row(
-                          children: [
-                            Checkbox(
-                              value: controller.rememberMe.value,
-                              onChanged: (_) => controller.toggleRememberMe(),
-                            ),
-                            const Text('Remember me'),
-                          ],
+                  // Confirm Password Field
+                  InputField(
+                    hintText: 'Confirm Password',
+                    controller: _confirmPasswordController,
+                    obscureText: true,
+                    isPassword: true,
+                    textInputAction: TextInputAction.done,
+                    autofillHints: const [AutofillHints.newPassword],
+                    prefixIcon: Icon(
+                      PhosphorIconsRegular.lock,
+                      color: Colors.grey[600],
+                    ),
+                    validator: _validateConfirmPassword,
+                    onFieldSubmitted: (_) => _register(),
+                  ),
+                  24.kH,
+
+                  // Register Button
+                  _isLoading
+                      ? const PrimaryLoader()
+                      : PrimaryButton(
+                          label: 'Sign Up',
+                          onPressed: _register,
                         ),
-                      ),
-                      TextButton(
-                        onPressed: () {
-                          // Navigate to forgot password
-                        },
-                        child: const Text('Forgot Password?'),
-                      ),
-                    ],
-                  ),
                   24.kH,
 
-                  // Login Button
-                  Obx(
-                    () => controller.isLoading
-                        ? const PrimaryLoader()
-                        : PrimaryButton(
-                            label: 'Login',
-                            onPressed: controller.login,
-                          ),
-                  ),
-                  24.kH,
-
-                  // Sign Up Link
+                  // Login Link
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        "Don't have an account? ",
+                        'Already have an account? ',
                         style: TextStyle(
                           color: Colors.grey[600],
                           fontSize: 14,
@@ -158,7 +220,7 @@ class LoginScreen extends GetView<AuthController> {
                       ),
                       TextButton(
                         onPressed: () {
-                          Get.toNamed(Routes.register);
+                          Get.back();
                         },
                         style: TextButton.styleFrom(
                           padding: EdgeInsets.zero,
@@ -166,7 +228,7 @@ class LoginScreen extends GetView<AuthController> {
                           tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                         ),
                         child: const Text(
-                          'Sign Up',
+                          'Login',
                           style: TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.w600,
