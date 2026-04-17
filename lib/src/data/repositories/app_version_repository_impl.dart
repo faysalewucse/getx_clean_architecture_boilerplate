@@ -14,7 +14,7 @@ class AppVersionRepositoryImpl implements AppVersionRepository {
 
       // Simulate an API call
       await Future.delayed(const Duration(seconds: 2));
-      return AppVersionEntity(currentAppVersion: 1, minimumAppVersion: 1);
+      return AppVersionEntity(currentAppVersion: 2, minimumAppVersion: 1);
     } catch (e) {
       throw Exception('Failed to fetch app version: $e');
     }

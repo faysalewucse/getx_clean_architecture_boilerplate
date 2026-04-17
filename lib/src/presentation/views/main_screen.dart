@@ -9,10 +9,10 @@ import 'package:getx_clean_architecture_boilerplate/src/core/utils/dialog_utils.
 import 'package:getx_clean_architecture_boilerplate/src/core/constants/app_strings.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
-import 'package:getx_clean_architecture_boilerplate/src/presentation/navigators/home_nav.dart';
-import 'package:getx_clean_architecture_boilerplate/src/presentation/navigators/category_nav.dart';
-import 'package:getx_clean_architecture_boilerplate/src/presentation/navigators/products_nav.dart';
-import 'package:getx_clean_architecture_boilerplate/src/presentation/navigators/profile_nav.dart';
+import 'package:getx_clean_architecture_boilerplate/src/presentation/views/home/home_screen.dart';
+import 'package:getx_clean_architecture_boilerplate/src/presentation/views/category/category_screen.dart';
+import 'package:getx_clean_architecture_boilerplate/src/presentation/views/products/products_screen.dart';
+import 'package:getx_clean_architecture_boilerplate/src/presentation/views/profile/profile_screen.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -43,11 +43,11 @@ class _MainScreenState extends State<MainScreen> {
   Widget _buildBody() {
     return Obx(() => IndexedStack(
           index: _screenController.currentIndex.value,
-          children: const [
-            HomeNav(),
-            CategoryNav(),
-            ProductsNav(),
-            ProfileNav(),
+          children: [
+            HomeScreen(),
+            CategoryScreen(),
+            ProductsScreen(),
+            const ProfileScreen(),
           ],
         ));
   }
@@ -84,17 +84,7 @@ class _MainScreenState extends State<MainScreen> {
 
         final currentIndex = _screenController.currentIndex.value;
 
-        // Try to pop from the current nested navigator first
-        final navigatorKey = Get.nestedKey(currentIndex);
-        final canPop = navigatorKey?.currentState?.canPop() ?? false;
-
-        if (canPop) {
-          // Pop from nested navigator
-          navigatorKey?.currentState?.pop();
-          return;
-        }
-
-        // If we're already on home tab and can't pop, show exit confirmation
+        // If we're already on home tab, show exit confirmation
         if (currentIndex == 0) {
           _showExitConfirmationDialog();
           return;
@@ -110,21 +100,8 @@ class _MainScreenState extends State<MainScreen> {
           titleSpacing: 0,
           leading: Obx(() {
             final themeController = Get.find<ThemeController>();
-            final isDark = themeController.currentTheme.value == ThemeMode.dark;
-            final showBack = _screenController.showBackButton.value;
+            final isDark = themeController.isDarkMode;
 
-            if (showBack) {
-              // Show back button for nested routes
-              return IconButton(
-                icon: Icon(
-                  PhosphorIconsRegular.arrowLeft,
-                  color: isDark ? Colors.white : Colors.black,
-                ),
-                onPressed: () => _screenController.handleBackButton(),
-              );
-            }
-
-            // Show drawer icon for main routes
             return Builder(
               builder: (context) => IconButton(
                 icon: Icon(
@@ -138,7 +115,7 @@ class _MainScreenState extends State<MainScreen> {
           actions: [
             Obx(() {
               final themeController = Get.find<ThemeController>();
-              final isDark = themeController.currentTheme.value == ThemeMode.dark;
+              final isDark = themeController.isDarkMode;
 
               return Padding(
                 padding: const EdgeInsets.only(right: 4.0),
@@ -163,7 +140,7 @@ class _MainScreenState extends State<MainScreen> {
   Widget _buildBottomNavigationBar() {
     return Obx(() {
       final themeController = Get.find<ThemeController>();
-      final isDark = themeController.currentTheme.value == ThemeMode.dark;
+      final isDark = themeController.isDarkMode;
       final currentIndex = _screenController.currentIndex.value;
 
       return Container(
@@ -297,7 +274,7 @@ class _MainScreenState extends State<MainScreen> {
 
   Widget _buildDrawer(BuildContext context) {
     final themeController = Get.find<ThemeController>();
-    final isDark = themeController.currentTheme.value == ThemeMode.dark;
+    final isDark = themeController.isDarkMode;
 
     return Drawer(
       backgroundColor: isDark ? const Color(0xFF1E1E1E) : Colors.white,
@@ -707,7 +684,7 @@ class _MainScreenState extends State<MainScreen> {
 
   void _showExitConfirmationDialog() {
     final themeController = Get.find<ThemeController>();
-    final isDark = themeController.currentTheme.value == ThemeMode.dark;
+    final isDark = themeController.isDarkMode;
 
     Get.dialog(
       AlertDialog(

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 
 class CustomImageViewer extends StatelessWidget {
   final String imageUrl;
@@ -14,6 +15,7 @@ class CustomImageViewer extends StatelessWidget {
   final Color? errorIconColor;
   final Duration? fadeInDuration;
   final Duration? placeholderFadeInDuration;
+  final BaseCacheManager? cacheManager;
 
   const CustomImageViewer({
     super.key,
@@ -29,12 +31,14 @@ class CustomImageViewer extends StatelessWidget {
     this.errorIconColor,
     this.fadeInDuration = const Duration(milliseconds: 300),
     this.placeholderFadeInDuration = const Duration(milliseconds: 200),
+    this.cacheManager,
   });
 
   @override
   Widget build(BuildContext context) {
     Widget imageWidget = CachedNetworkImage(
       imageUrl: imageUrl,
+      cacheManager: cacheManager,
       fit: fit,
       width: width,
       height: height,

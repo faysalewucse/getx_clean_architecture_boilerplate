@@ -5,6 +5,8 @@ import 'package:getx_clean_architecture_boilerplate/src/presentation/views/auth/
 import 'package:getx_clean_architecture_boilerplate/src/presentation/views/auth/register_screen.dart';
 import 'package:getx_clean_architecture_boilerplate/src/presentation/views/main_screen.dart';
 import 'package:getx_clean_architecture_boilerplate/src/presentation/views/splash_screen.dart';
+import 'package:getx_clean_architecture_boilerplate/src/presentation/views/profile/edit_profile_screen.dart';
+import 'package:getx_clean_architecture_boilerplate/src/presentation/views/profile/privacy_security_screen.dart';
 
 class AppPages{
   static List<GetPage> pages = [
@@ -41,7 +43,6 @@ class AppPages{
       transition: Transition.fadeIn,
       transitionDuration: const Duration(milliseconds: 300),
     ),
-    // Profile routes with MainScreen wrapper to keep bottom nav
     GetPage(
       name: Routes.profile,
       page: () => const MainScreen(),
@@ -49,14 +50,14 @@ class AppPages{
     ),
     GetPage(
       name: Routes.editProfile,
-      page: () => const MainScreen(),
+      page: () => const EditProfileScreen(),
       middlewares: [AuthMiddleware()],
       transition: Transition.rightToLeft,
       transitionDuration: const Duration(milliseconds: 300),
     ),
     GetPage(
       name: Routes.privacySecurity,
-      page: () => const MainScreen(),
+      page: () => const PrivacySecurityScreen(),
       middlewares: [AuthMiddleware()],
       transition: Transition.rightToLeft,
       transitionDuration: const Duration(milliseconds: 300),

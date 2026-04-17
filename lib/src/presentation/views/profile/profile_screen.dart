@@ -5,7 +5,6 @@ import 'package:getx_clean_architecture_boilerplate/src/controllers/theme_contro
 import 'package:getx_clean_architecture_boilerplate/src/presentation/views/auth/auth_controller.dart';
 import 'package:getx_clean_architecture_boilerplate/src/presentation/routes/app_routes.dart';
 import 'package:getx_clean_architecture_boilerplate/src/core/utils/size_utils.dart';
-import 'package:getx_clean_architecture_boilerplate/src/core/constants/nav_ids.dart';
 import 'package:getx_clean_architecture_boilerplate/src/core/constants/app_colors.dart';
 
 class ProfileScreen extends StatelessWidget {
@@ -15,7 +14,7 @@ class ProfileScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final themeController = Get.find<ThemeController>();
     final authController = Get.find<AuthController>();
-    final isDark = themeController.currentTheme.value == ThemeMode.dark;
+    final isDark = themeController.isDarkMode;
 
     return Scaffold(
       body: SingleChildScrollView(
@@ -182,7 +181,7 @@ class ProfileScreen extends StatelessWidget {
                         title: 'Edit Profile',
                         subtitle: 'Update your profile information',
                         onTap: () {
-                          Get.toNamed(Routes.editProfile, id: NavIds.profile);
+                          Get.toNamed(Routes.editProfile);
                         },
                       ),
                       _buildDivider(),
@@ -209,7 +208,7 @@ class ProfileScreen extends StatelessWidget {
                         title: 'Privacy & Security',
                         subtitle: 'Password, 2FA, and security',
                         onTap: () {
-                          Get.toNamed(Routes.privacySecurity, id: NavIds.profile);
+                          Get.toNamed(Routes.privacySecurity);
                         },
                       ),
                     ],
@@ -231,7 +230,7 @@ class ProfileScreen extends StatelessWidget {
                     [
                       Obx(() {
                         final isDarkMode =
-                            themeController.currentTheme.value == ThemeMode.dark;
+                            themeController.isDarkMode;
                         return _buildMenuItem(
                           icon: isDarkMode ? PhosphorIconsRegular.moon : PhosphorIconsRegular.sun,
                           title: 'Dark Mode',
@@ -343,7 +342,7 @@ class ProfileScreen extends StatelessWidget {
     return Builder(
       builder: (context) {
         final themeController = Get.find<ThemeController>();
-        final isDark = themeController.currentTheme.value == ThemeMode.dark;
+        final isDark = themeController.isDarkMode;
 
         return Column(
           children: [
@@ -395,7 +394,7 @@ class ProfileScreen extends StatelessWidget {
     return Builder(
       builder: (context) {
         final themeController = Get.find<ThemeController>();
-        final isDark = themeController.currentTheme.value == ThemeMode.dark;
+        final isDark = themeController.isDarkMode;
 
         return ListTile(
           onTap: trailing == null ? onTap : null,
@@ -433,7 +432,7 @@ class ProfileScreen extends StatelessWidget {
     return Builder(
       builder: (context) {
         final themeController = Get.find<ThemeController>();
-        final isDark = themeController.currentTheme.value == ThemeMode.dark;
+        final isDark = themeController.isDarkMode;
 
         return Divider(
           height: 1,
